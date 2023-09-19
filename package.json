@@ -1,0 +1,43 @@
+{
+  "name": "plantilla-expressjs-mongodbdriver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/index.js",
+    "migrations:generate": "sequelize-cli migration:generate --name",
+    "migrations:run": "sequelize-cli db:migrate",
+    "migrations:revert": "sequelize-cli db:migrate:undo",
+    "migrations:revert:name": "sequelize-cli db:migrate:undo --name",
+    "migrations:revert:all": "sequelize-cli db:migrate:undo:all",
+    "seeds:generate": "sequelize-cli seed:generate --name",
+    "seeds:run": "sequelize-cli db:seed:all",
+    "seeds:undo:name": "sequelize-cli db:seed:undo --seed"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "joi": "^17.10.1",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.6.1",
+    "nodemon": "^3.0.1",
+    "passport": "^0.6.0",
+    "passport-jwt": "^4.0.1",
+    "passport-local": "^1.0.0",
+    "sequelize": "^6.33.0"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^8.0.2",
+    "babel-register": "^6.26.0",
+    "sequelize-cli": "^6.6.1"
+  }
+}
