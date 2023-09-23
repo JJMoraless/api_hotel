@@ -1,36 +1,41 @@
 const { DataTypes, Model, Sequelize } = require("sequelize");
+const { ROOM_TABLE } = require("./room.model.cjs");
+const { PRODUCT_TABLE } = require("./product.model.cjs");
 
-const BILL_TABLE = "bills";
-
-const consumableShema = {
+const INVENTORY_TABLE = "inventory";
+const IventorySchema = {
   id: {
     allowNull: false,
     autoIncrement: true,
     primaryKey: true,
     type: DataTypes.INTEGER,
   },
-  userId: {
+  productId: {
     allowNull: false,
-    field: "user_id",
+    field: "product_id",
     unique: true,
     type: DataTypes.INTEGER,
     references: {
-      model: REGISTER_TABLE,
+      model: PRODUCT_TABLE,
       key: "id",
     },
     onUpdate: "CASCADE",
     onDelete: "CASCADE",
   },
-  registerId: {
+  roomNumber: {
     allowNull: false,
-    type: DataTypes.STRING,
-  },
-  totalPerStay: {
-    allowNull: true,
+    field: "room_number",
+    unique: true,
     type: DataTypes.INTEGER,
+    references: {
+      model: ROOM_TABLE,
+      key: "number",
+    },
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE",
   },
-  totalPerConsumable: {
-    allowNull: true,
+  stock: {
+    allowNull: false,
     type: DataTypes.INTEGER,
   },
   createAt: {
@@ -41,16 +46,20 @@ const consumableShema = {
   },
 };
 
-class Consumable extends Model {
-  static associate() {}
+class Inventory extends Model {
+  static associate(models) {}
   static config(sequelize) {
     return {
       sequelize,
-      tableName: CONSUMABLE_TABLE,
-      modelName: "Consumable",
+      tableName: INVENTORY_TABLE,
+      modelName: "Inventary",
       timestamps: false,
     };
   }
 }
 
-module.exports = { CONSUMABLE_TABLE, consumableShema, Consumable };
+module.exports = {
+  INVENTORY_TABLE,
+  IventorySchema,
+  Inventory,
+};

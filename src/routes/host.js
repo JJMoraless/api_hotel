@@ -12,9 +12,6 @@ router.post(
   wrapError(HostCrll.create)
 );
 
+router.get("/", wrapError(HostCrll.get));
 
-
-router.get(
-  "/",
-  wrapError(HostCrll.get)
-);
+router.get("/:id", wrapError(HostCrll.getById));

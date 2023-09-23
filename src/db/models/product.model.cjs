@@ -1,8 +1,7 @@
 const { DataTypes, Model, Sequelize } = require("sequelize");
+const PRODUCT_TABLE = "products";
 
-const CONSUMABLE_TABLE = "consumables";
-
-const consumableShema = {
+const productSchema = {
   id: {
     allowNull: false,
     autoIncrement: true,
@@ -13,9 +12,9 @@ const consumableShema = {
     allowNull: false,
     type: DataTypes.STRING,
   },
-  stock: {
-    allowNull: true,
-    type: DataTypes.INTEGER,
+  type: {
+    allowNull: false,
+    type: DataTypes.STRING,
   },
   createAt: {
     allowNull: false,
@@ -29,18 +28,16 @@ const consumableShema = {
   },
 };
 
-class Consumable extends Model {
-  static associate() {
-    
-  }
+class Product extends Model {
+  static associate() {}
   static config(sequelize) {
     return {
       sequelize,
-      tableName: CONSUMABLE_TABLE,
-      modelName: "Consumable",
+      tableName: PRODUCT_TABLE,
+      modelName: "Product",
       timestamps: false,
     };
   }
 }
 
-module.exports = { CONSUMABLE_TABLE, consumableShema, Consumable };
+module.exports = { PRODUCT_TABLE, productSchema, Product };

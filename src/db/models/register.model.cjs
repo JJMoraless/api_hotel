@@ -52,11 +52,11 @@ class Register extends Model {
     this.belongsTo(models.User, { as: "user" });
     this.belongsTo(models.Reservation, { as: "reservation" });
 
-    this.belongsToMany(models.Consumable, {
-      through: models.RegisterConsumable,
-      as: "consumables",
+    this.belongsToMany(models.Product, {
+      through: models.RegisterProduct,
+      as: "products",
       foreignKey: "registerId",
-      otherKey: "consumableId",
+      otherKey: "productId",
     });
   }
   static config(sequelize) {

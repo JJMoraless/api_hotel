@@ -1,9 +1,9 @@
 const { DataTypes, Model, Sequelize } = require("sequelize");
 const { REGISTER_TABLE } = require("./register.model.cjs");
-const { CONSUMABLE_TABLE } = require("./consumable.model.cjs");
+const { PRODUCT_TABLE } = require("./product.model.cjs");
 
-const REGISTER_CONSUMABLE_TABLE = "registers_comsumables";
-const RegisterConsumableSchema = {
+const REGISTER_PRODUCT_TABLE = "register_product";
+const RegisterProductSchema = {
   id: {
     allowNull: false,
     autoIncrement: true,
@@ -22,13 +22,14 @@ const RegisterConsumableSchema = {
     onUpdate: "CASCADE",
     onDelete: "CASCADE",
   },
-  consumableId: {
+  productId: {
     allowNull: false,
-    field: "consumable_id",
+    field: "product_id",
+
     unique: true,
     type: DataTypes.INTEGER,
     references: {
-      model: CONSUMABLE_TABLE,
+      model: PRODUCT_TABLE,
       key: "id",
     },
     onUpdate: "CASCADE",
@@ -46,20 +47,20 @@ const RegisterConsumableSchema = {
   },
 };
 
-class RegisterConsumable extends Model {
+class RegisterProduct extends Model {
   static associate(models) {}
   static config(sequelize) {
     return {
       sequelize,
-      tableName: REGISTER_CONSUMABLE_TABLE,
-      modelName: "RegisterConsumable",
+      tableName: REGISTER_PRODUCT_TABLE,
+      modelName: "RegisterProduct",
       timestamps: false,
     };
   }
 }
 
 module.exports = {
-  REGISTER_CONSUMABLE_TABLE,
-  RegisterConsumableSchema,
-  RegisterConsumable,
+  REGISTER_PRODUCT_TABLE,
+  RegisterProductSchema,
+  RegisterProduct,
 };

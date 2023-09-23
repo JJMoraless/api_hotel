@@ -1,6 +1,5 @@
 import { request } from "express";
 import { resOk } from "../utils/functions.js";
-import { ClientError } from "../utils/errors.js";
 import { models } from "../libs/sequelize.js";
 
 export class RegisterCrll {
@@ -18,18 +17,27 @@ export class RegisterCrll {
     const registersFound = await models.Register.findAll({
       offset: page ? limit * page : 0,
       limit,
+      include: [{ model: models.Reservation, as: "reservation" }],
     });
     resOk(res, { registers: registersFound });
   }
 
   static async getById(req = request, res) {
     const { id } = req.params;
-    const hostFound = await models.Host.findByPk(id);
+    const registerFound = await models.Register.findByPk(id, {
+      include: [{ register: models.Reservation, as: "reservation" }],
+    });
     resOk(res, { host: hostFound });
   }
 
   static async update(res, req = request) {
     resOk(res, {});
+  }
+
+  static async addConsumable(req = request, res) {
+    const data = req.body;
+    const newRegisterConsumable = await models.RegisterConsumable.create(data);
+    resOk(res, { consumableAdd: newRegisterConsumable });
   }
 
   static async delete(res, req = request) {}
