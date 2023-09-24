@@ -1,4 +1,5 @@
 const { DataTypes, Model, Sequelize } = require("sequelize");
+
 const { REGISTER_TABLE } = require("./register.model.cjs");
 const { PRODUCT_TABLE } = require("./product.model.cjs");
 
@@ -13,7 +14,6 @@ const RegisterProductSchema = {
   registerId: {
     allowNull: false,
     field: "register_id",
-    unique: true,
     type: DataTypes.INTEGER,
     references: {
       model: REGISTER_TABLE,
@@ -25,8 +25,6 @@ const RegisterProductSchema = {
   productId: {
     allowNull: false,
     field: "product_id",
-
-    unique: true,
     type: DataTypes.INTEGER,
     references: {
       model: PRODUCT_TABLE,
@@ -39,11 +37,21 @@ const RegisterProductSchema = {
     allowNull: false,
     type: DataTypes.INTEGER,
   },
+  price: {
+    allowNull: false,
+    type: DataTypes.INTEGER,
+  },
   createAt: {
     allowNull: false,
     type: DataTypes.DATE,
     field: "create_at",
     defaultValue: Sequelize.fn("now"),
+  },
+  total: {
+    type: DataTypes.VIRTUAL,
+    get() {
+      return this.price * this.amount;
+    },
   },
 };
 

@@ -8,6 +8,7 @@ import {
   RegisterProduct,
   RegisterProductSchema,
 } from "./register-product.model.cjs";
+import { Inventory, IventorySchema } from "./inventory.model.cjs";
 
 export const setupModels = (sequelize) => {
   // Creacion modelos
@@ -17,7 +18,7 @@ export const setupModels = (sequelize) => {
   Host.init(HostShema, Host.config(sequelize));
   Register.init(RegisterShema, Register.config(sequelize));
   Product.init(productSchema, Product.config(sequelize));
-
+  Inventory.init(IventorySchema, Inventory.config(sequelize));
   RegisterProduct.init(
     RegisterProductSchema,
     RegisterProduct.config(sequelize)
@@ -27,4 +28,5 @@ export const setupModels = (sequelize) => {
   Reservation.associate(sequelize.models);
   Room.associate(sequelize.models);
   Register.associate(sequelize.models);
+  Product.associate(sequelize.models);
 };

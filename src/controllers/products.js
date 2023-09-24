@@ -2,22 +2,29 @@ import { request } from "express";
 import { resOk } from "../utils/functions.js";
 import { models } from "../libs/sequelize.js";
 
-export class ConsumableCrll {
+export class ProductCrll {
   static async create(req = request, res) {
     const newConsumable = await models.Product.create(req.body);
     resOk(res, { consumable: newConsumable });
   }
 
   static async get(req = request, res) {
-    const { page: queryPage = 0, limit: queryLimit = 5 } = req.query;
-    const page = Number(queryPage);
-    const limit = Number(queryLimit);
+    let { page = 0, limit = 5, type } = req.query;
+    page = Number(page);
+    limit = Number(limit);
 
-    const consumablesFound = await models.Product.findAll({
-      offset: page ? limit * page : 0,
+    const options = {
+      offset: page
+        ? limit * page 
+        : 0,
       limit,
-    });
+    };
 
+    if (type) {
+      options.where = { type };
+    }
+
+    const consumablesFound = await models.Product.findAll(options);
     resOk(res, { consumables: consumablesFound });
   }
 

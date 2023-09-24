@@ -7,7 +7,6 @@ import { Op } from "sequelize";
 export class ReservationCrll {
   static async create(req = request, res) {
     const { roomNumber, dateEntry, dateOutput } = req.body;
-
     const roomAvaible = await models.Room.findOne({
       include: [
         {
@@ -42,6 +41,7 @@ export class ReservationCrll {
     const reservationCreated = await models.Reservation.create({
       ...req.body,
       state: "reservada",
+      priceRoom: roomAvaible.pricePerNight,
     });
 
     resOk(res, { reservation: reservationCreated });
@@ -87,6 +87,7 @@ export class ReservationCrll {
     resOk(res, { reservation });
   }
 
+  
   static async update(res, req = request) {}
   static async delete(res, req = request) {}
 }

@@ -22,6 +22,10 @@ const ReservationShema = {
     onUpdate: "CASCADE",
     onDelete: "CASCADE",
   },
+  priceRoom:{
+    allowNull: false,
+    type: DataTypes.INTEGER,
+  },
   userId: {
     allowNull: false,
     field: "user_id",
@@ -54,10 +58,6 @@ const ReservationShema = {
     allowNull: false,
     field: "date_output",
   },
-  days: {
-    type: DataTypes.INTEGER,
-    allowNull: true,
-  },
   numChildrens: {
     type: DataTypes.INTEGER,
     allowNull: true,
@@ -86,7 +86,7 @@ class Reservation extends Model {
     this.belongsTo(models.User, { as: "user" });
     this.belongsTo(models.Host, { as: "host" });
     this.hasOne(models.Register, {
-      as: "registro",
+      as: "register",
       foreignKey: "reservationId",
     });
   }

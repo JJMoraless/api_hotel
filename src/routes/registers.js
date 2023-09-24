@@ -3,9 +3,10 @@ import { wrapError } from "../middlewares/errorsHandler.js";
 import { RegisterCrll } from "../controllers/registers.js";
 import { validatorHandler } from "../middlewares/shemasHandler.js";
 import {
-  addConsumableShema,
+  addProductShema,
   postRegisterSchema,
 } from "../schemas/registerSchema.js";
+
 export const router = Router();
 
 router.post(
@@ -16,9 +17,11 @@ router.post(
 
 router.post(
   "/add-consumable",
-  validatorHandler(addConsumableShema, "body"),
+  validatorHandler(addProductShema, "body"),
   wrapError(RegisterCrll.addConsumable)
 );
+
+router.get("/:id/products", wrapError(RegisterCrll.getByIdWithProducts));
 
 router.get("/:id", wrapError(RegisterCrll.getById));
 router.get("/", wrapError(RegisterCrll.get));

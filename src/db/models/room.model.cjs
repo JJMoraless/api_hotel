@@ -41,11 +41,17 @@ const RoomShema = {
 };
 
 class Room extends Model {
-
   static associate(models) {
     this.hasMany(models.Reservation, {
       foreignKey: "roomNumber",
       as: "reservations",
+    });
+
+    this.belongsToMany(models.Product, {
+      through: models.Inventary,
+      as: "products",
+      foreignKey: "roomNumber",
+      otherKey: "productId",
     });
   }
 

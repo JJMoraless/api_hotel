@@ -13,7 +13,6 @@ const IventorySchema = {
   productId: {
     allowNull: false,
     field: "product_id",
-    unique: true,
     type: DataTypes.INTEGER,
     references: {
       model: PRODUCT_TABLE,
@@ -25,7 +24,6 @@ const IventorySchema = {
   roomNumber: {
     allowNull: false,
     field: "room_number",
-    unique: true,
     type: DataTypes.INTEGER,
     references: {
       model: ROOM_TABLE,
@@ -34,7 +32,7 @@ const IventorySchema = {
     onUpdate: "CASCADE",
     onDelete: "CASCADE",
   },
-  stock: {
+  amount: {
     allowNull: false,
     type: DataTypes.INTEGER,
   },

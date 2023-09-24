@@ -39,11 +39,64 @@ const RegisterShema = {
     defaultValue: false,
     field: "is_check_out",
   },
-  createAt: {
-    allowNull: false,
+  createdAt: {
     type: DataTypes.DATE,
-    field: "create_at",
-    defaultValue: Sequelize.fn("now"),
+    field: "created_at",
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    field: "updated_at",
+  },
+
+  totalProducts: {
+    type: DataTypes.VIRTUAL,
+    get() {
+      if (this?.products?.length > 0) {
+        return this.products.reduce((total, product) => {
+          return (
+            total +
+            product.RegisterProduct.amount * product.RegisterProduct.price
+          );
+        }, 0);
+      }
+      return 0;
+    },
+  },
+
+  daysReserved: {
+    type: DataTypes.VIRTUAL,
+    get() {
+      if (!this.reservation) return 0;
+      const dateEntry = new Date(this.reservation.dateEntry);
+      const dateOutput = new Date(this.reservation.dateOutput);
+      const diferenciaEnMilisegundos = dateOutput - dateEntry;
+      const diferenciaEnDias = diferenciaEnMilisegundos / (1000 * 60 * 60 * 24);
+      return diferenciaEnDias;
+    },
+  },
+
+  // daysStayed: {
+  //   type: DataTypes.VIRTUAL,
+  //   get() {
+  //     if (!this.reservation) return 0;
+  //     const dateEntry = new Date(this.createdAt);
+  //     const dateOutput = new Date(this.updatedAt);
+  //     const diferenciaEnMilisegundos = dateOutput - dateEntry;
+  //     const diferenciaEnDias = diferenciaEnMilisegundos / (1000 * 60 * 60 * 24);
+  //     return diferenciaEnDias;
+  //   },
+  // },
+
+  totalReservation: {
+    type: DataTypes.VIRTUAL,
+    get() {
+      if (!this.reservation) return 0;
+      const dateEntry = new Date(this.reservation.dateEntry);
+      const dateOutput = new Date(this.reservation.dateOutput);
+      const diferenciaEnMilisegundos = dateOutput - dateEntry;
+      const diferenciaEnDias = diferenciaEnMilisegundos / (1000 * 60 * 60 * 24);
+      return this.reservation.priceRoom * diferenciaEnDias;
+    },
   },
 };
 
@@ -59,12 +112,13 @@ class Register extends Model {
       otherKey: "productId",
     });
   }
+
   static config(sequelize) {
     return {
       sequelize,
       tableName: REGISTER_TABLE,
       modelName: "Register",
-      timestamps: false,
+      timestamps: true,
     };
   }
 }

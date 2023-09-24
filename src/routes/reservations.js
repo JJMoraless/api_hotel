@@ -5,7 +5,7 @@ import { validatorHandler } from "../middlewares/shemasHandler.js";
 import {
   getShemaReservation,
   postReservationSchema,
-} from "../schemas/reservationShema.js";
+} from "../schemas/reservationSchema.js";
 
 import { ReservationCrll } from "../controllers/reservations.js";
 
