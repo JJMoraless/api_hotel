@@ -43,7 +43,7 @@ export class RegisterCrll {
     const registerFound = await models.Register.findByPk(Number(id), {
       include: ["reservation"],
     });
-    resOk(res, { host: registerFound });
+    resOk(res, { register: registerFound });
   }
 
   static async getByIdWithProducts(req = request, res) {
@@ -73,6 +73,7 @@ export class RegisterCrll {
     const registerProduct = await models.RegisterProduct.findOne({
       where: { productId, registerId },
     });
+
     if (registerProduct) {
       await registerProduct.increment({ amount });
       const UpdatedRegisterProduct = await models.RegisterProduct.findByPk(
@@ -80,6 +81,7 @@ export class RegisterCrll {
       );
       return resOk(res, { consumable: UpdatedRegisterProduct });
     }
+
     const product = await models.Product.findByPk(Number(productId));
     const newRegisterConsumable = await models.RegisterProduct.create({
       ...req.body,

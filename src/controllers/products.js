@@ -14,9 +14,7 @@ export class ProductCrll {
     limit = Number(limit);
 
     const options = {
-      offset: page
-        ? limit * page 
-        : 0,
+      offset: page ? limit * page : 0,
       limit,
     };
 
@@ -25,7 +23,7 @@ export class ProductCrll {
     }
 
     const consumablesFound = await models.Product.findAll(options);
-    resOk(res, { consumables: consumablesFound });
+    resOk(res, { products: consumablesFound });
   }
 
   static async getById(req = request, res) {
