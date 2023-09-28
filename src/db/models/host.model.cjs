@@ -45,7 +45,7 @@ const HostShema = {
     field: "number_phone",
   },
   occupation: {
-    allowNull: false,
+    allowNull: true,
     type: DataTypes.STRING,
   },
 };

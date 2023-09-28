@@ -17,6 +17,7 @@ export class HostCrll {
     const hostFound = await models.Host.findAll({
       offset: page ? limit * page : 0,
       limit,
+      order:[["create_at", "DESC"]]
     });
 
     resOk(res, { host: hostFound });

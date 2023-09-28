@@ -12,7 +12,7 @@ export class ProductCrll {
     let { page = 0, limit = 5, type } = req.query;
     page = Number(page);
     limit = Number(limit);
-
+    
     const options = {
       offset: page ? limit * page : 0,
       limit,

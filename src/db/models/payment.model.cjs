@@ -1,15 +1,15 @@
 const { DataTypes, Model, Sequelize } = require("sequelize");
+import { REGISTER_TABLE } from "./register.model.cjs";
 
-const BILL_TABLE = "bills";
-
-const consumableShema = {
+const PAYMENT_TABLE = "payments";
+const PaymentSchema = {
   id: {
     allowNull: false,
     autoIncrement: true,
     primaryKey: true,
     type: DataTypes.INTEGER,
   },
-  userId: {
+  registerId: {
     allowNull: false,
     field: "user_id",
     unique: true,
@@ -21,23 +21,18 @@ const consumableShema = {
     onUpdate: "CASCADE",
     onDelete: "CASCADE",
   },
-  registerId: {
+  type: {
     allowNull: false,
     type: DataTypes.STRING,
   },
-  totalPerStay: {
-    allowNull: true,
-    type: DataTypes.INTEGER,
-  },
-  totalPerConsumable: {
-    allowNull: true,
-    type: DataTypes.INTEGER,
-  },
-  createAt: {
-    allowNull: false,
+  
+  createdAt: {
     type: DataTypes.DATE,
-    field: "create_at",
-    defaultValue: Sequelize.fn("now"),
+    field: "created_at",
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    field: "updated_at",
   },
 };
 
@@ -48,7 +43,7 @@ class Consumable extends Model {
       sequelize,
       tableName: CONSUMABLE_TABLE,
       modelName: "Consumable",
-      timestamps: false,
+      timestamps: true,
     };
   }
 }

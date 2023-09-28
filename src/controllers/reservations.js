@@ -7,37 +7,24 @@ import { Op } from "sequelize";
 export class ReservationCrll {
   static async create(req = request, res) {
     const { roomNumber, dateEntry, dateOutput } = req.body;
-    const roomAvaible = await models.Room.findOne({
-      include: [
-        {
-          model: models.Reservation,
-          as: "reservations",
-          required: false,
 
-          where: {
-            [Op.or]: {
-              date_entry: {
-                [Op.between]: [new Date(dateEntry), new Date(dateOutput)],
-              },
-
-              date_output: {
-                [Op.between]: [new Date(dateEntry), new Date(dateOutput)],
-              },
-            },
-          },
-        },
-      ],
-
+    const reservations = await models.Reservation.findAll({
       where: {
-        "$reservations.id$": { [Op.is]: null },
-        number: roomNumber,
+        date_entry: {
+          [Op.lte]: new Date(dateOutput),
+        },
+        date_output: {
+          [Op.gte]: new Date(dateEntry),
+        },
+        roomNumber,
       },
     });
 
-    if (!roomAvaible) {
+    if (reservations.length > 0) {
       throw new ClientError("habitacion no disponible para esas fechas");
     }
 
+    const roomAvaible = await models.Room.findByPk(roomNumber);
     const reservationCreated = await models.Reservation.create({
       ...req.body,
       state: "reservada",
@@ -87,7 +74,6 @@ export class ReservationCrll {
     resOk(res, { reservation });
   }
 
-  
   static async update(res, req = request) {}
   static async delete(res, req = request) {}
 }

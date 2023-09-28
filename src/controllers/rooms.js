@@ -3,41 +3,35 @@ import { resOk } from "../utils/functions.js";
 import { ClientError } from "../utils/errors.js";
 import { getRoomsAvailable } from "../utils/dbFunctions.js";
 import { models } from "../libs/sequelize.js";
-import { Op } from "sequelize";
+import { DATE, Op } from "sequelize";
 export class RoomCrll {
   static async create(req = request, res) {}
 
   static async getAvailable(req = request, res) {
     const { date_entry, date_output } = req.query;
-
     if (!date_entry || !date_output) {
       throw new ClientError("debe filtrar por date_entry y date_output ");
     }
-
     const roomsAvaible = await models.Room.findAll({
       include: [
         {
           model: models.Reservation,
           as: "reservations",
-          required: false,
           where: {
-            [Op.or]: {
-              date_entry: {
-                [Op.between]: [new Date(date_entry), new Date(date_output)],
-              },
-
-              date_output: {
-                [Op.between]: [new Date(date_entry), new Date(date_output)],
-              },
+            date_entry: {
+              [Op.lte]: new Date(date_output),
+            },
+            date_output: {
+              [Op.gte]: new Date(date_entry),
             },
           },
+          required: false,
         },
       ],
       where: {
         "$reservations.id$": { [Op.is]: null },
       },
     });
-
     resOk(res, { rooms: roomsAvaible });
   }
 

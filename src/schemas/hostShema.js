@@ -13,11 +13,11 @@ const occupation = Joi.string();
 export const postShemaHost = Joi.object({
   document: document.required(),
   name: name.required(),
-  birthdayDate: birthdayDate.required(),
+  birthdayDate,
   email: email.required(),
-  addres: addres.required(),
-  city: city.required(),
-  country: country.required(),
+  addres,
+  city,
+  country,
   numberPhone: numberPhone.required(),
-  occupation: occupation.required(),
+  occupation
 });
