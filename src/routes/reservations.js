@@ -5,6 +5,7 @@ import { validatorHandler } from "../middlewares/shemasHandler.js";
 import {
   getShemaReservation,
   postReservationSchema,
+  putReservationSchema,
 } from "../schemas/reservationSchema.js";
 
 import { ReservationCrll } from "../controllers/reservations.js";
@@ -29,4 +30,10 @@ router.get(
   "/:id",
   validatorHandler(getShemaReservation, "params"),
   wrapError(ReservationCrll.getById)
+);
+
+router.put(
+  "/:id",
+  validatorHandler(putReservationSchema, "body"),
+  wrapError(ReservationCrll.update)
 );

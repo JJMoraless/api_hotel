@@ -17,7 +17,7 @@ export class HostCrll {
     const hostFound = await models.Host.findAll({
       offset: page ? limit * page : 0,
       limit,
-      order:[["create_at", "DESC"]]
+      order: [["create_at", "DESC"]],
     });
 
     resOk(res, { host: hostFound });
@@ -29,8 +29,17 @@ export class HostCrll {
     resOk(res, { host: hostFound });
   }
 
-  static async update(res, req = request) {
-    resOk(res, {});
+  static async update(req = request, res) {
+    const { document } = req.params;
+    const data = req.body;
+
+    await models.Host.update(
+      { ...data },
+      { where: { document: document }, returning: true }
+    );
+
+    const host = await models.Host.findByPk(document);
+    resOk(res, { host });
   }
 
   static async delete(res, req = request) {}

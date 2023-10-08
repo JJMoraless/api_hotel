@@ -9,9 +9,11 @@ export class RoomCrll {
 
   static async getAvailable(req = request, res) {
     const { date_entry, date_output } = req.query;
+    
     if (!date_entry || !date_output) {
       throw new ClientError("debe filtrar por date_entry y date_output ");
     }
+
     const roomsAvaible = await models.Room.findAll({
       include: [
         {

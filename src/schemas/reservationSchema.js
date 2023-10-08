@@ -24,11 +24,11 @@ export const getShemaReservation = Joi.object({
 });
 
 export const putReservationSchema = Joi.object({
-  roomNumber: roomNumber,
-  userId: userId,
-  hostDocument: hostDocument,
-  dateEntry: dateEntry,
-  dateOutput: dateOutput,
-  numChildrens: numChildrens,
-  numAdults: numAdults,
+  roomNumber,
+  userId,
+  hostDocument,
+  dateEntry,
+  dateOutput,
+  numChildrens,
+  numAdults,
 });

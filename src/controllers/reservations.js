@@ -7,7 +7,6 @@ import { Op } from "sequelize";
 export class ReservationCrll {
   static async create(req = request, res) {
     const { roomNumber, dateEntry, dateOutput } = req.body;
-
     const reservations = await models.Reservation.findAll({
       where: {
         date_entry: {
@@ -74,6 +73,21 @@ export class ReservationCrll {
     resOk(res, { reservation });
   }
 
-  static async update(res, req = request) {}
+  static async update(req = request, res) {
+    const { id } = req.params;
+    const data = req.body;
+
+    await models.Reservation.update(
+      { ...data },
+      {
+        where: {
+          id: id,
+        },
+      }
+    );
+
+    const reservationsUpdate = await models.Reservation.findByPk(id);
+    resOk(res, { reservation: reservationsUpdate });
+  }
   static async delete(res, req = request) {}
 }

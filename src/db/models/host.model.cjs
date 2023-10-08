@@ -48,6 +48,14 @@ const HostShema = {
     allowNull: true,
     type: DataTypes.STRING,
   },
+  company: {
+    allowNull: true,
+    type: DataTypes.STRING,
+  },
+  document_type: {
+    allowNull: true,
+    type: DataTypes.STRING,
+  },
 };
 
 class Host extends Model {

@@ -47,7 +47,10 @@ const RegisterShema = {
     type: DataTypes.DATE,
     field: "updated_at",
   },
-
+  travel_reason: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
   totalProducts: {
     type: DataTypes.VIRTUAL,
     get() {

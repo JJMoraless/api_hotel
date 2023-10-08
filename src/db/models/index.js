@@ -10,6 +10,10 @@ import {
 } from "./register-product.model.cjs";
 import { Inventory, IventorySchema } from "./inventory.model.cjs";
 
+
+
+
+
 export const setupModels = (sequelize) => {
   // Creacion modelos
   User.init(UserShema, User.config(sequelize));

@@ -9,6 +9,13 @@ const city = Joi.string();
 const numberPhone = Joi.number().integer();
 const country = Joi.string();
 const occupation = Joi.string();
+const company = Joi.string();
+const document_type = Joi.string();
+
+
+export const getSchemaHost = Joi.object({
+  document: document.required(),
+});
 
 export const postShemaHost = Joi.object({
   document: document.required(),
@@ -19,5 +26,21 @@ export const postShemaHost = Joi.object({
   city,
   country,
   numberPhone: numberPhone.required(),
-  occupation
+  occupation,
+  company,
+  document_type
+});
+
+export const putSchemaHost = Joi.object({
+  document,
+  name,
+  birthdayDate,
+  email,
+  addres,
+  city,
+  country,
+  numberPhone,
+  occupation,
+  company,
+  document_type
 });
