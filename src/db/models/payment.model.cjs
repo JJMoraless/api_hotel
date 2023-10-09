@@ -1,17 +1,17 @@
 const { DataTypes, Model, Sequelize } = require("sequelize");
-import { REGISTER_TABLE } from "./register.model.cjs";
+const { REGISTER_TABLE } = require("./register.model.cjs");
 
 const PAYMENT_TABLE = "payments";
 const PaymentSchema = {
   id: {
+    type: DataTypes.INTEGER,
     allowNull: false,
     autoIncrement: true,
     primaryKey: true,
-    type: DataTypes.INTEGER,
   },
   registerId: {
     allowNull: false,
-    field: "user_id",
+    field: "register_id",
     unique: true,
     type: DataTypes.INTEGER,
     references: {
@@ -21,11 +21,14 @@ const PaymentSchema = {
     onUpdate: "CASCADE",
     onDelete: "CASCADE",
   },
-  type: {
-    allowNull: false,
+  method: {
     type: DataTypes.STRING,
+    allowNull: false,
   },
-  
+  amount: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
   createdAt: {
     type: DataTypes.DATE,
     field: "created_at",
@@ -35,17 +38,19 @@ const PaymentSchema = {
     field: "updated_at",
   },
 };
-
-class Consumable extends Model {
+class Payment extends Model {
   static associate() {}
   static config(sequelize) {
     return {
       sequelize,
-      tableName: CONSUMABLE_TABLE,
-      modelName: "Consumable",
+      tableName: PAYMENT_TABLE,
+      modelName: "Payment",
       timestamps: true,
     };
   }
 }
-
-module.exports = { CONSUMABLE_TABLE, consumableShema, Consumable };
+module.exports = {
+  PAYMENT_TABLE,
+  PaymentSchema,
+  Payment,
+};

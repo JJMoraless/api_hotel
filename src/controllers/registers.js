@@ -18,10 +18,7 @@ export class RegisterCrll {
     const registerCreated = await models.Register.create(req.body, {
       include: [{ model: models.Reservation, as: "reservation" }],
     });
-    console.log(
-      "🚀 ~ file: registers.js:19 ~ RegisterCrll ~ create ~ registerCreated:",
-      registerCreated
-    );
+
     resOk(res, { register: registerCreated });
   }
 
@@ -79,6 +76,13 @@ export class RegisterCrll {
       const UpdatedRegisterProduct = await models.RegisterProduct.findByPk(
         registerProduct.id
       );
+
+      let inventory = await models.Inventary.findOne({
+        where: { productId, roomNumber },
+      });
+
+      console.log({ registerProduct });
+
       return resOk(res, { consumable: UpdatedRegisterProduct });
     }
 

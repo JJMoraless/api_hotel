@@ -58,6 +58,7 @@ export class ReservationCrll {
       page: queryPage = 0,
       limit: queryLimit = 5,
       order = "DESC",
+      state = "reservada",
     } = req.query;
 
     const page = Number(queryPage);
@@ -68,6 +69,9 @@ export class ReservationCrll {
       limit,
       include: [{ model: models.Host, as: "host" }],
       order: [["create_at", order]],
+      where: {
+        state,
+      },
     });
 
     resOk(res, { reservation });

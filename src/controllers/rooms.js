@@ -4,6 +4,7 @@ import { ClientError } from "../utils/errors.js";
 import { getRoomsAvailable } from "../utils/dbFunctions.js";
 import { models } from "../libs/sequelize.js";
 import { DATE, Op } from "sequelize";
+
 export class RoomCrll {
   static async create(req = request, res) {}
 

@@ -9,10 +9,7 @@ import {
   RegisterProductSchema,
 } from "./register-product.model.cjs";
 import { Inventory, IventorySchema } from "./inventory.model.cjs";
-
-
-
-
+import { Payment, PaymentSchema } from "./payment.model.cjs";
 
 export const setupModels = (sequelize) => {
   // Creacion modelos
@@ -23,6 +20,8 @@ export const setupModels = (sequelize) => {
   Register.init(RegisterShema, Register.config(sequelize));
   Product.init(productSchema, Product.config(sequelize));
   Inventory.init(IventorySchema, Inventory.config(sequelize));
+  Payment.init(PaymentSchema, Payment.config(sequelize));
+
   RegisterProduct.init(
     RegisterProductSchema,
     RegisterProduct.config(sequelize)
