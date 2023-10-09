@@ -90,7 +90,7 @@ const RegisterShema = {
   //   },
   // },
 
-  totalReservation: {
+  totalRoomReserved: {
     type: DataTypes.VIRTUAL,
     get() {
       if (!this.reservation) return 0;

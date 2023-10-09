@@ -5,13 +5,12 @@ const userId = Joi.number().integer();
 const reservationId = Joi.number().integer();
 const amount = Joi.number().integer();
 const consumableId = Joi.number().integer();
-const price = Joi.number().integer();
-const travel_reason = Joi.string()
+const travel_reason = Joi.string();
 
 export const postRegisterSchema = Joi.object({
   userId: userId.required(),
   reservationId: reservationId.required(),
-  travel_reason: travel_reason.required()
+  travel_reason: travel_reason.required(),
 });
 
 export const addProductShema = Joi.object({

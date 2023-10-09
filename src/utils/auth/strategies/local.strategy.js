@@ -5,7 +5,7 @@ import { models } from "../../../libs/sequelize.js";
 // Autorizacion con localStrategy
 
 // validar las credenciales
-// agrega un objeto user al request (el que viene de la busqueda a la db)
+// agrega un objeto user (sin password) al request (el que viene de la busqueda a la db)
 
 const config = {
   usernameField: "email",

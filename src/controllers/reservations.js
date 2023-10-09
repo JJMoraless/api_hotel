@@ -7,6 +7,10 @@ import { Op } from "sequelize";
 export class ReservationCrll {
   static async create(req = request, res) {
     const { roomNumber, dateEntry, dateOutput } = req.body;
+
+    if (new Date(dateOutput) < new Date(dateEntry))
+      throw new ClientError("dates error");
+
     const reservations = await models.Reservation.findAll({
       where: {
         date_entry: {
