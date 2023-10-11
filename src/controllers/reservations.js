@@ -74,7 +74,7 @@ export class ReservationCrll {
       include: [{ model: models.Host, as: "host" }],
       order: [["create_at", order]],
       where: {
-        state,
+        [Op.or]: [{ state: state }, { state: "checkIn" }],
       },
     });
 
@@ -97,5 +97,14 @@ export class ReservationCrll {
     const reservationsUpdate = await models.Reservation.findByPk(id);
     resOk(res, { reservation: reservationsUpdate });
   }
-  static async delete(res, req = request) {}
+
+  static async delete(req = request, res) {
+    const { id } = req.params;
+
+    const reservationDelete = await models.Reservation.destroy({
+      where: { id: id },
+    });
+
+    resOk(res, { reservation: reservationDelete });
+  }
 }

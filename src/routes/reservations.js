@@ -37,3 +37,10 @@ router.put(
   validatorHandler(putReservationSchema, "body"),
   wrapError(ReservationCrll.update)
 );
+
+
+router.delete(
+  "/:id",
+  validatorHandler(putReservationSchema, "body"),
+  wrapError(ReservationCrll.delete)
+);
