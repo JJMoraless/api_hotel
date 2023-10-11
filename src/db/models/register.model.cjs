@@ -74,7 +74,8 @@ const RegisterShema = {
       const dateOutput = new Date(this.reservation.dateOutput);
       const diferenciaEnMilisegundos = dateOutput - dateEntry;
       const diferenciaEnDias = diferenciaEnMilisegundos / (1000 * 60 * 60 * 24);
-      return diferenciaEnDias;
+
+      return diferenciaEnDias || 1;
     },
   },
 
@@ -97,7 +98,7 @@ const RegisterShema = {
       const dateEntry = new Date(this.reservation.dateEntry);
       const dateOutput = new Date(this.reservation.dateOutput);
       const diferenciaEnMilisegundos = dateOutput - dateEntry;
-      const diferenciaEnDias = diferenciaEnMilisegundos / (1000 * 60 * 60 * 24);
+      const diferenciaEnDias = diferenciaEnMilisegundos / (1000 * 60 * 60 * 24) || 1;
       return this.reservation.priceRoom * diferenciaEnDias;
     },
   },
@@ -107,6 +108,7 @@ class Register extends Model {
   static associate(models) {
     this.belongsTo(models.User, { as: "user" });
     this.belongsTo(models.Reservation, { as: "reservation" });
+    this.hasMany(models.Payment, { foreignKey: "registerId", as: "payments" });
 
     this.belongsToMany(models.Product, {
       through: models.RegisterProduct,
