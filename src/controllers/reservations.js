@@ -62,7 +62,7 @@ export class ReservationCrll {
       page: queryPage = 0,
       limit: queryLimit = 5,
       order = "DESC",
-      state = "reservada",
+      state = "reservada", // reservada checkIn cancell
     } = req.query;
 
     const page = Number(queryPage);
@@ -74,7 +74,7 @@ export class ReservationCrll {
       include: [{ model: models.Host, as: "host" }],
       order: [["create_at", order]],
       where: {
-        [Op.or]: [{ state: state }, { state: "checkIn" }],
+        [Op.or]: [{ state: state }, { state: "reservada" }],
       },
     });
 

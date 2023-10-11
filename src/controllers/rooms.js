@@ -10,9 +10,13 @@ export class RoomCrll {
 
   static async getAvailable(req = request, res) {
     const { date_entry, date_output } = req.query;
-    
+
     if (!date_entry || !date_output) {
       throw new ClientError("debe filtrar por date_entry y date_output ");
+    }
+
+    if (new Date(date_entry) > new Date(date_output)) {
+      throw new ClientError("fecha de entrada no debe ser mayor a de salida");
     }
 
     const roomsAvaible = await models.Room.findAll({
@@ -20,6 +24,7 @@ export class RoomCrll {
         {
           model: models.Reservation,
           as: "reservations",
+          required: false,
           where: {
             date_entry: {
               [Op.lte]: new Date(date_output),
@@ -28,13 +33,13 @@ export class RoomCrll {
               [Op.gte]: new Date(date_entry),
             },
           },
-          required: false,
         },
       ],
       where: {
         "$reservations.id$": { [Op.is]: null },
       },
     });
+
     resOk(res, { rooms: roomsAvaible });
   }
 
@@ -66,6 +71,7 @@ export class RoomCrll {
 
   static async getByIdWithConsumables(req = request, res) {
     const { id } = req.params;
+    
     const room = await models.Room.findByPk(id, {
       include: ["products"],
     });
@@ -81,8 +87,16 @@ export class RoomCrll {
         {
           association: "reservations",
           order: [["id", "DESC"]],
-          limit: 1,
+          // limit: 1,
           include: ["register"],
+          where: {
+            date_entry: {
+              [Op.lte]: new Date(),
+            },
+            date_output: {
+              [Op.gte]: new Date(),
+            },
+          },
         },
       ],
 
