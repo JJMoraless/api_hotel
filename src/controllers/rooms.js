@@ -44,7 +44,25 @@ export class RoomCrll {
   }
 
   static async get(req = request, res) {
-    const roomsFound = await models.Room.findAll();
+    const roomsFound = await models.Room.findAll({
+      include: [
+        {
+          required: false,
+          association: "reservations",
+          order: [["id", "DESC"]],
+          // limit: 1,
+          include: ["register"],
+          where: {
+            date_entry: {
+              [Op.lte]: new Date(),
+            },
+            date_output: {
+              [Op.gte]: new Date(),
+            },
+          },
+        },
+      ],
+    });
     resOk(res, { rooms: roomsFound });
   }
 
@@ -71,7 +89,7 @@ export class RoomCrll {
 
   static async getByIdWithConsumables(req = request, res) {
     const { id } = req.params;
-    
+
     const room = await models.Room.findByPk(id, {
       include: ["products"],
     });
