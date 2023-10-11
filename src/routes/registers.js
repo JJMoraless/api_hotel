@@ -3,6 +3,7 @@ import { wrapError } from "../middlewares/errorsHandler.js";
 import { RegisterCrll } from "../controllers/registers.js";
 import { validatorHandler } from "../middlewares/shemasHandler.js";
 import {
+  addPaymentShema,
   addProductShema,
   postRegisterSchema,
 } from "../schemas/registerSchema.js";
@@ -21,7 +22,14 @@ router.post(
   wrapError(RegisterCrll.addConsumable)
 );
 
+router.post(
+  "/add-payment",
+  validatorHandler(addPaymentShema, "body"),
+  wrapError(RegisterCrll.addPayment)
+);
+
 router.get("/:id/products", wrapError(RegisterCrll.getByIdWithProducts));
 
 router.get("/:id", wrapError(RegisterCrll.getById));
+
 router.get("/", wrapError(RegisterCrll.get));

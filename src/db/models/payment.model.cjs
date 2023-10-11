@@ -12,7 +12,6 @@ const PaymentSchema = {
   registerId: {
     allowNull: false,
     field: "register_id",
-    unique: true,
     type: DataTypes.INTEGER,
     references: {
       model: REGISTER_TABLE,
