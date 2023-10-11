@@ -140,13 +140,15 @@ export class RegisterCrll {
       where: { productId, roomNumber },
     });
 
-    if (!inventory)
+    if (!inventory) {
       throw new ClientError("Empty minibar in the room " + roomNumber);
+    }
 
-    if (inventory.amount < amount)
+    if (inventory.amount < amount) {
       throw new ClientError(
         "available " + inventory.amount + " products in stock"
       );
+    }
 
     await models.Inventary.decrement(
       { amount },

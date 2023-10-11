@@ -1,4 +1,4 @@
-const { DataTypes, Model, Sequelize } = require("sequelize");
+const { DataTypes, Model } = require("sequelize");
 const TODO_TABLE = "todos";
 
 const TodoSchema = {
@@ -8,39 +8,26 @@ const TodoSchema = {
     primaryKey: true,
     type: DataTypes.INTEGER,
   },
-  title: {
-    allowNull: false,
-    type: DataTypes.STRING(50),
-  },
-  description: {
+  content: {
     allowNull: false,
     type: DataTypes.TEXT,
   },
+  check: {
+    allowNull: false,
+    type: DataTypes.BOOLEAN,
+  },
 };
 
-class Room extends Model {
-  static associate(models) {
-    this.hasMany(models.Reservation, {
-      foreignKey: "roomNumber",
-      as: "reservations",
-    });
-
-    this.belongsToMany(models.Product, {
-      through: models.Inventary,
-      as: "products",
-      foreignKey: "roomNumber",
-      otherKey: "productId",
-    });
-  }
-
+class Todo extends Model {
+  static associate(models) {}
   static config(sequelize) {
     return {
       sequelize,
-      tableName: ROOM_TABLE,
-      modelName: "Room",
+      tableName: TODO_TABLE,
+      modelName: "Todo",
       timestamps: false,
     };
   }
 }
 
-module.exports = { ROOM_TABLE, RoomShema, Room };
+module.exports = { TODO_TABLE, TodoSchema, Todo };
