@@ -124,6 +124,21 @@ export class RegisterCrll {
     });
   }
 
+  static async addCompanion(req = request, res) {
+    const { registerId, companionId } = await req.body;
+
+    await models.RegisterCompanion.create({
+      registerId,
+      companionId,
+    });
+
+    const register = await models.Register.findByPk(registerId, {
+      include: "companions",
+    });
+
+    resOk(res, { register });
+  }
+
   static async addConsumable(req = request, res) {
     const { productId, registerId, amount } = req.body;
 
@@ -141,7 +156,7 @@ export class RegisterCrll {
     });
 
     if (!inventory) {
-      throw new ClientError("Empty minibar in the room " + roomNumber);
+      throw new ClientError("not product in minibar" + roomNumber);
     }
 
     if (inventory.amount < amount) {
@@ -159,24 +174,31 @@ export class RegisterCrll {
       where: { productId, registerId },
     });
 
+    const product = await models.Product.findByPk(Number(productId));
+
     if (registerProduct) {
       await registerProduct.increment({ amount });
-      const UpdatedRegisterProduct = await models.RegisterProduct.findByPk(
+      await registerProduct.update({ price: product.price });
+
+      const registerProductUpdate = await models.RegisterProduct.findByPk(
         registerProduct.id
       );
 
       return resOk(res, {
-        consumable: UpdatedRegisterProduct,
+        consumable: registerProductUpdate,
         amount_available: inventory.amount - amount,
       });
     }
 
-    const product = await models.Product.findByPk(Number(productId));
     const newRegisterConsumable = await models.RegisterProduct.create({
       ...req.body,
       price: product.price,
     });
-    resOk(res, { consumable: newRegisterConsumable });
+
+    resOk(res, {
+      consumable: newRegisterConsumable,
+      amount_available: inventory.amount - amount,
+    });
   }
 
   static async delete(res, req = request) {}
