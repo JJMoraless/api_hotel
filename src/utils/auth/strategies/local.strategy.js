@@ -14,7 +14,7 @@ const config = {
 
 const localStrategy = new Strategy(config, async (email, password, done) => {
   try {
-    const user = await models.User.findOne({ where: { email } });
+    const user = await models.User.findOne({ where: { email }, raw: true });
     if (!user) {
       throw new ClientError("email not found");
     }

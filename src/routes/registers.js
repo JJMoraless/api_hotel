@@ -3,6 +3,7 @@ import { wrapError } from "../middlewares/errorsHandler.js";
 import { RegisterCrll } from "../controllers/registers.js";
 import { validatorHandler } from "../middlewares/shemasHandler.js";
 import {
+  addCompanionShcema,
   addPaymentShema,
   addProductShema,
   postRegisterSchema,
@@ -28,8 +29,12 @@ router.post(
   wrapError(RegisterCrll.addPayment)
 );
 
+router.post(
+  "/add-companion",
+  validatorHandler(addCompanionShcema, "body"),
+  wrapError(RegisterCrll.addCompanion)
+);
+
 router.get("/:id/products", wrapError(RegisterCrll.getByIdWithProducts));
-
 router.get("/:id", wrapError(RegisterCrll.getById));
-
 router.get("/", wrapError(RegisterCrll.get));

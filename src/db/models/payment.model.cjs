@@ -37,6 +37,7 @@ const PaymentSchema = {
     field: "updated_at",
   },
 };
+
 class Payment extends Model {
   static associate() {}
   static config(sequelize) {
@@ -48,6 +49,7 @@ class Payment extends Model {
     };
   }
 }
+
 module.exports = {
   PAYMENT_TABLE,
   PaymentSchema,

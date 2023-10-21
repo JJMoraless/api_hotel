@@ -98,7 +98,8 @@ const RegisterShema = {
       const dateEntry = new Date(this.reservation.dateEntry);
       const dateOutput = new Date(this.reservation.dateOutput);
       const diferenciaEnMilisegundos = dateOutput - dateEntry;
-      const diferenciaEnDias = diferenciaEnMilisegundos / (1000 * 60 * 60 * 24) || 1;
+      const diferenciaEnDias =
+        diferenciaEnMilisegundos / (1000 * 60 * 60 * 24) || 1;
       return this.reservation.priceRoom * diferenciaEnDias;
     },
   },
@@ -115,6 +116,13 @@ class Register extends Model {
       as: "products",
       foreignKey: "registerId",
       otherKey: "productId",
+    });
+
+    this.belongsToMany(models.Host, {
+      through: models.RegisterCompanion,
+      as: "companions",
+      foreignKey: "registerId",
+      otherKey: "companionId",
     });
   }
 
