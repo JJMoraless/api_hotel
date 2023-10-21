@@ -15,6 +15,6 @@ export class AuthCrll {
     });
 
     res.cookie("token", token);
-    resOk(res, { token });
+    resOk(res, { token, user });
   }
 }
