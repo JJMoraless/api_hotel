@@ -1,9 +1,9 @@
-import { request, response } from "express";
+import { request } from "express";
 import { resOk } from "../utils/functions.js";
 import { ClientError } from "../utils/errors.js";
-import { getRoomsAvailable } from "../utils/dbFunctions.js";
 import { models } from "../libs/sequelize.js";
-import { DATE, Op } from "sequelize";
+import { Op } from "sequelize";
+import { format } from "date-fns";
 
 export class RoomCrll {
   static async create(req = request, res) {}
@@ -44,25 +44,35 @@ export class RoomCrll {
   }
 
   static async get(req = request, res) {
+    let day = new Date();
+    day.setHours(0, 0, 0, 0);
+
+    let midNigth = new Date();
+    midNigth.setHours(10, 0, 0, 0);
+
+    day = format(day, "yyyy-MM-dd HH:mm:ss");
+    midNigth = format(midNigth, "yyyy-MM-dd HH:mm:ss");
+
+
     const roomsFound = await models.Room.findAll({
       include: [
         {
           required: false,
           association: "reservations",
           order: [["id", "DESC"]],
-          // limit: 1,
-          include: ["register"],
+          include: ["register", "host"],
           where: {
-            date_entry: {
-              [Op.lte]: new Date(),
+            dateEntry: {
+              [Op.lte]: midNigth,
             },
-            date_output: {
-              [Op.gte]: new Date(),
+            dateOutput: {
+              [Op.gte]: day,
             },
           },
         },
       ],
     });
+
     resOk(res, { rooms: roomsFound });
   }
 
@@ -104,15 +114,17 @@ export class RoomCrll {
       include: [
         {
           association: "reservations",
-          order: [["id", "DESC"]],
-          // limit: 1,
+          required: false,
           include: ["register"],
+          order: [["id", "DESC"]],
+
           where: {
             date_entry: {
-              [Op.lte]: new Date(),
+              [Op.lte]: new Date().setHours(0, 0, 0, 0),
             },
+
             date_output: {
-              [Op.gte]: new Date(),
+              [Op.gte]: new Date().setHours(0, 0, 0, 0),
             },
           },
         },
