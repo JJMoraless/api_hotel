@@ -32,8 +32,16 @@ export class ProductCrll {
     resOk(res, { consumable: consumableFound });
   }
 
-  static async update(res, req = request) {
-    resOk(res, {});
+  static async update(req = request, res) {
+    const data = req.body;
+    const id = Number(req.params.id);
+    await models.Product.update(data, {
+      where: {
+        id,
+      },
+    });
+    const product = await models.Product.findByPk(id);
+    resOk(res, { product });
   }
 
   static async delete(res, req = request) {}
