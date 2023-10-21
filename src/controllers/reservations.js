@@ -51,6 +51,7 @@ export class ReservationCrll {
         },
 
         { model: models.Host, as: "host" },
+        { model: models.Register, as: "register" },
       ],
     });
 
@@ -71,7 +72,10 @@ export class ReservationCrll {
     const reservation = await models.Reservation.findAll({
       offset: page ? limit * page : 0,
       limit,
-      include: [{ model: models.Host, as: "host" }],
+      include: [
+        { model: models.Host, as: "host" },
+        { model: models.Register, as: "register" },
+      ],
       order: [["create_at", order]],
       where: {
         [Op.or]: [{ state: state }, { state: "reservada" }],
