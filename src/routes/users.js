@@ -12,5 +12,11 @@ router.post(
   wrapError(UserCrll.create)
 );
 
+router.put(
+  "/",
+  validatorHandler(postUserShema, "body"),
+  wrapError(UserCrll.update)
+);
+
 
 router.get("/", wrapError(UserCrll.get));

@@ -8,7 +8,6 @@ import {
   addProductShema,
   postRegisterSchema,
 } from "../schemas/registerSchema.js";
-
 export const router = Router();
 
 router.post(

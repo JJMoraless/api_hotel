@@ -38,8 +38,22 @@ export class UserCrll {
     resOk(res, { users: usersFound });
   }
 
-  static async update(res, req = request) {
-    resOk(res, {});
+  static async update(req = request, res) {
+    const  id  = Number(req.params.id);
+
+    await models.User.update(
+      { ...req.body },
+      {
+        where: {
+          id,
+        },
+      }
+    );
+
+
+    const userFound = await models.User.findByPk()
+
+    resOk(res, {user: userFound});
   }
 
   static async delete(res, req = request) {}

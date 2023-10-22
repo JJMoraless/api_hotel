@@ -8,6 +8,7 @@ const numberPhone = Joi.string();
 const role = Joi.string();
 const addres = Joi.string();
 const ficha = Joi.string();
+const state = Joi.string();
 
 export const postUserShema = Joi.object({
   email: email.required(),
@@ -31,6 +32,7 @@ export const putUserShema = Joi.object({
   role,
   addres,
   ficha,
+  state
 });
 
 export const loginUserShema = Joi.object({
