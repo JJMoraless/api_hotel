@@ -6,6 +6,9 @@ import { models } from "../libs/sequelize.js";
 
 export class UserCrll {
   static async create(req = request, res) {
+
+
+    
     const userFound = await models.User.findOne({
       where: {
         email: req.body.email,
@@ -50,9 +53,13 @@ export class UserCrll {
       }
     );
 
+    const userFound = await models.User.findByPk(id)
+    resOk(res, {user: userFound});
+  }
 
-    const userFound = await models.User.findByPk()
-
+  static async getById(req = request, res) {
+    const  id  = Number(req.params.id);
+    const userFound = await models.User.findByPk(id)
     resOk(res, {user: userFound});
   }
 

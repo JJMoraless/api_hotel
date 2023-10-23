@@ -43,6 +43,11 @@ const UserShema = {
     type: DataTypes.STRING,
     defaultValue: "active"
   },
+  document: {
+    allowNull: false,
+    type: DataTypes.STRING,
+    unique: true,
+  },
   createAt: {
     allowNull: false,
     type: DataTypes.DATE,
