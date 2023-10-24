@@ -37,3 +37,4 @@ router.post(
 router.get("/:id/products", wrapError(RegisterCrll.getByIdWithProducts));
 router.get("/:id", wrapError(RegisterCrll.getById));
 router.get("/", wrapError(RegisterCrll.get));
+router.get("/:id/payments", wrapError(RegisterCrll.getPayments));

@@ -6,9 +6,6 @@ import { models } from "../libs/sequelize.js";
 
 export class UserCrll {
   static async create(req = request, res) {
-
-
-    
     const userFound = await models.User.findOne({
       where: {
         email: req.body.email,
@@ -21,7 +18,6 @@ export class UserCrll {
       password: await hash(req.body.password, 10),
     });
     delete userCreated.dataValues.password;
-
     resOk(res, { user: userCreated });
   }
 

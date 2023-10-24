@@ -39,7 +39,7 @@ export class RegisterCrll {
   static async getById(req = request, res) {
     const { id } = req.params;
     const registerFound = await models.Register.findByPk(Number(id), {
-      include: ["reservation", "products"],
+      include: ["reservation", "products", "payments"],
     });
 
     // const totalProducts = registerFound.totalProducts;
@@ -70,6 +70,62 @@ export class RegisterCrll {
     resOk(res, {});
   }
 
+  // static async addPayment(req = request, res) {
+  //   const { registerId, amount, ...dataPayment } = await req.body;
+  //   const register = await models.Register.findByPk(registerId, {
+  //     include: [
+  //       {
+  //         model: models.Reservation,
+  //         as: "reservation",
+  //       },
+  //       {
+  //         model: models.Payment,
+  //         as: "payments",
+  //       },
+  //       {
+  //         model: models.Product,
+  //         as: "products",
+  //       },
+  //     ],
+  //   });
+
+  //   let payments = await models.Payment.findAll({
+  //     where: { registerId },
+  //     raw: true,
+  //   });
+    
+    
+  //   const totalRoomPerDay = register.totalRoomReserved;
+  //   const totalProducts = register.totalProducts;
+  //   const netTotal = totalProducts + totalRoomPerDay;
+  //   let totalPayments = payments.reduce((acc, el) => acc + el.amount, 0);
+  //   const totalToPay = netTotal - totalPayments;
+  //   const returnPay = !amount - totalToPay ? 0 : amount - totalToPay;
+  //   const finalAmount = amount - returnPay;
+  //   if (totalToPay) {
+  //     await models.Payment.create({
+  //       registerId,
+  //       amount: finalAmount,
+  //       ...dataPayment,
+  //     });
+  //   }
+
+  //   payments = await models.Payment.findAll({
+  //     where: { registerId },
+  //     raw: true,
+  //   });
+
+  //   totalPayments = payments.reduce((acc, el) => acc + el.amount, 0);
+
+
+  //   resOk(res, {
+  //     payments,
+  //     totalPayments,
+  //     totalToPay,
+  //     returnPay,
+  //   });
+  // }
+
   static async addPayment(req = request, res) {
     const { registerId, amount, ...dataPayment } = await req.body;
     const register = await models.Register.findByPk(registerId, {
@@ -88,40 +144,51 @@ export class RegisterCrll {
         },
       ],
     });
-
+  
     let payments = await models.Payment.findAll({
       where: { registerId },
       raw: true,
     });
-
-    const totalPayments = payments.reduce((acc, el) => acc + el.amount, 0);
-
-    const totalProducts = register.totalProducts;
+  
     const totalRoomPerDay = register.totalRoomReserved;
+    const totalProducts = register.totalProducts;
     const netTotal = totalProducts + totalRoomPerDay;
-    const totalToPay = netTotal - totalPayments;
-    const returnPay = !amount - totalToPay ? 0 : amount - totalToPay;
-    const finalAmount = amount - returnPay;
-
-    if (totalToPay) {
+    let totalPayments = payments.reduce((acc, el) => acc + el.amount, 0);
+    let totalToPay = netTotal - totalPayments;
+    
+    if (totalToPay > 0) { // Solo si hay saldo pendiente por pagar
+      const finalAmount = Math.min(amount, totalToPay); // Asegura que no se pague más de lo que se debe
       await models.Payment.create({
         registerId,
         amount: finalAmount,
         ...dataPayment,
       });
     }
-
+  
     payments = await models.Payment.findAll({
       where: { registerId },
       raw: true,
     });
-
+  
+    totalPayments = payments.reduce((acc, el) => acc + el.amount, 0);
+    totalToPay = netTotal - totalPayments;
+  
     resOk(res, {
       payments,
       totalPayments,
       totalToPay,
-      returnPay,
+      returnPay: 0, 
     });
+  }
+  
+
+  static async getPayments(req = request, res) {
+    const id = Number(req.params.id);
+    const register = await models.Register.findByPk(id, {
+      include: ["payments", "reservation", "products"],
+    });
+
+    resOk(res, { register });
   }
 
   static async addCompanion(req = request, res) {
@@ -178,7 +245,7 @@ export class RegisterCrll {
 
     if (registerProduct) {
       await registerProduct.increment({ amount });
-      await registerProduct.update({ price: product.price });
+      // await registerProduct.update({ price: product.price });
 
       const registerProductUpdate = await models.RegisterProduct.findByPk(
         registerProduct.id

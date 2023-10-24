@@ -12,7 +12,7 @@ export class ProductCrll {
     let { page = 0, limit = 5, type } = req.query;
     page = Number(page);
     limit = Number(limit);
-    
+
     const options = {
       offset: page ? limit * page : 0,
       limit,
@@ -44,5 +44,14 @@ export class ProductCrll {
     resOk(res, { product });
   }
 
-  static async delete(res, req = request) {}
+  static async delete(req = request, res) {
+    const id = Number(req.params.id);
+    await models.Product.destroy({
+      where: {
+        id,
+      },
+    });
+
+    resOk(res, { product: "delete" });
+  }
 }

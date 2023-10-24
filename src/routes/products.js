@@ -1,9 +1,13 @@
 import { Router } from "express";
 import { AuthCrll } from "../controllers/auth.js";
 import { wrapError } from "../middlewares/errorsHandler.js";
-import { passportLocal } from "../utils/auth/index.js";
+// import { passportLocal } from "../utils/auth/index.js";
 import { validatorHandler } from "../middlewares/shemasHandler.js";
-import { getProductShema, postProduct, putProductShema } from "../schemas/productSchema.js";
+import {
+  getProductShema,
+  postProduct,
+  putProductShema,
+} from "../schemas/productSchema.js";
 import { ProductCrll } from "../controllers/products.js";
 
 export const router = Router();
@@ -19,6 +23,12 @@ router.put(
   validatorHandler(getProductShema, "params"),
   validatorHandler(putProductShema, "body"),
   wrapError(ProductCrll.update)
+);
+
+router.delete(
+  "/:id",
+  validatorHandler(getProductShema, "params"),
+  wrapError(ProductCrll.delete)
 );
 
 router.get("/", wrapError(ProductCrll.get));

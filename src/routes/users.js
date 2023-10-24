@@ -17,6 +17,5 @@ router.put(
   wrapError(UserCrll.update)
 );
 
-
 router.get("/", wrapError(UserCrll.get));
 router.get("/:id", wrapError(UserCrll.getById));

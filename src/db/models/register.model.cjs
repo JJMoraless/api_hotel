@@ -71,11 +71,10 @@ const RegisterShema = {
     get() {
       if (!this.reservation) return 0;
       const dateEntry = new Date(this.reservation.dateEntry);
-      const dateOutput = new Date(this.reservation.dateOutput);
+      const dateOutput = new Date(this.reservation.dateOutput)
       const diferenciaEnMilisegundos = dateOutput - dateEntry;
       const diferenciaEnDias = diferenciaEnMilisegundos / (1000 * 60 * 60 * 24);
-
-      return diferenciaEnDias || 1;
+      return Math.round(diferenciaEnDias)
     },
   },
 
@@ -100,7 +99,7 @@ const RegisterShema = {
       const diferenciaEnMilisegundos = dateOutput - dateEntry;
       const diferenciaEnDias =
         diferenciaEnMilisegundos / (1000 * 60 * 60 * 24) || 1;
-      return this.reservation.priceRoom * diferenciaEnDias;
+      return this.reservation.priceRoom * Math.round(diferenciaEnDias);
     },
   },
 };
