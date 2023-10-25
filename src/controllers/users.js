@@ -12,10 +12,10 @@ export class UserCrll {
       },
     });
     if (userFound) throw new ClientError("Email already exists");
-
     const userCreated = await models.User.create({
       ...req.body,
       password: await hash(req.body.password, 10),
+      role: "aprendiz"
     });
     delete userCreated.dataValues.password;
     resOk(res, { user: userCreated });
@@ -39,6 +39,13 @@ export class UserCrll {
 
   static async update(req = request, res) {
     const  id  = Number(req.params.id);
+    const userFoundValidateEmail = await models.User.findOne({
+      where: {
+        email: req.body.email,
+      },
+    });
+    
+    if (userFoundValidateEmail) throw new ClientError("Email already exists");
 
     await models.User.update(
       { ...req.body },
