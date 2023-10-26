@@ -15,36 +15,46 @@ export class UserCrll {
     const userCreated = await models.User.create({
       ...req.body,
       password: await hash(req.body.password, 10),
-      role: "aprendiz"
+      role: "aprendiz",
     });
     delete userCreated.dataValues.password;
     resOk(res, { user: userCreated });
   }
 
   static async get(req = request, res) {
-    const { page: queryPage = 0, limit: queryLimit = 5 } = req.query;
-    const page = Number(queryPage);
-    const limit = Number(queryLimit);
+    let { page = 0, limit = 400, document, ficha } = req.query;
+    page = Number(page);
+    limit = Number(limit);
 
-    const usersFound = await models.User.findAll({
+    const options = {
       offset: page ? limit * page : 0,
       limit,
       attributes: {
         exclude: ["password"],
       },
-    });
+    };
+
+    if (document) {
+      options.where.document = document;
+    }
+
+    if (ficha) {
+      options.where.document = document;
+    }
+
+    const usersFound = await models.User.findAll(options);
 
     resOk(res, { users: usersFound });
   }
 
   static async update(req = request, res) {
-    const  id  = Number(req.params.id);
+    const id = Number(req.params.id);
     const userFoundValidateEmail = await models.User.findOne({
       where: {
         email: req.body.email,
       },
     });
-    
+
     if (userFoundValidateEmail) throw new ClientError("Email already exists");
 
     await models.User.update(
@@ -56,14 +66,14 @@ export class UserCrll {
       }
     );
 
-    const userFound = await models.User.findByPk(id)
-    resOk(res, {user: userFound});
+    const userFound = await models.User.findByPk(id);
+    resOk(res, { user: userFound });
   }
 
   static async getById(req = request, res) {
-    const  id  = Number(req.params.id);
-    const userFound = await models.User.findByPk(id)
-    resOk(res, {user: userFound});
+    const id = Number(req.params.id);
+    const userFound = await models.User.findByPk(id);
+    resOk(res, { user: userFound });
   }
 
   static async delete(res, req = request) {}
