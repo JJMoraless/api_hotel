@@ -25,7 +25,7 @@ export class UserCrll {
   }
 
   static async get(req = request, res) {
-    let { page = 0, limit = 400, document, ficha } = req.query;
+    let { page = 0, limit = 400, document, ficha, state } = req.query;
     page = Number(page);
     limit = Number(limit);
 
@@ -37,8 +37,10 @@ export class UserCrll {
       },
     };
 
-    if (document) options.where = { document };
-    if (ficha) options.where = { ficha };
+    options.where = {};
+    if (document) options.where.document = document;
+    if (ficha) options.where.ficha = ficha;
+    if (state) options.where.state = state;
 
     const usersFound = await models.User.findAll(options);
     resOk(res, { users: usersFound });

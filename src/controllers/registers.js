@@ -39,12 +39,17 @@ export class RegisterCrll {
   static async getById(req = request, res) {
     const { id } = req.params;
     const registerFound = await models.Register.findByPk(Number(id), {
-      include: ["reservation", "products", "payments"],
+      include: ["reservation", "products", "payments", "companions"],
     });
 
-    // const totalProducts = registerFound.totalProducts;
-    // const totalRoomPerDay = registerFound.totalRoomReserved;
+    const totalProducts = registerFound.totalProducts;
+    const totalRoomPerDay = registerFound.totalRoomReserved;
+    const numCompanions = registerFound.companions.reduce((acc, el) => acc + el, 0);
+    console.log("🚀 ~ file: registers.js:48 ~ RegisterCrll ~ getById ~ numCompanions:", numCompanions)
     // const totalToPay = totalProducts + totalRoomPerDay - totalPayments;
+
+
+
 
     resOk(res, { register: registerFound });
   }

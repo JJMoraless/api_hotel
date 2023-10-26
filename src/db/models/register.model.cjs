@@ -62,14 +62,14 @@ const RegisterShema = {
           );
         }, 0);
       }
-      return 0;
+      return null;
     },
   },
 
   daysReserved: {
     type: DataTypes.VIRTUAL,
     get() {
-      if (!this.reservation) return 0;
+      if (!this.reservation) return null;
       const dateEntry = new Date(this.reservation.dateEntry);
       const dateOutput = new Date(this.reservation.dateOutput)
       const diferenciaEnMilisegundos = dateOutput - dateEntry;
@@ -93,7 +93,7 @@ const RegisterShema = {
   totalRoomReserved: {
     type: DataTypes.VIRTUAL,
     get() {
-      if (!this.reservation) return 0;
+      if (!this.reservation) return null;
       const dateEntry = new Date(this.reservation.dateEntry);
       const dateOutput = new Date(this.reservation.dateOutput);
       const diferenciaEnMilisegundos = dateOutput - dateEntry;
