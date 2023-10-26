@@ -35,12 +35,18 @@ export class UserCrll {
     };
 
     if (document) {
-      options.where.document = document;
+      options.where = {
+        document,
+      };
     }
 
     if (ficha) {
-      options.where.document = document;
+      options.where = {
+        ficha,
+      };
     }
+
+    console.log(options);
 
     const usersFound = await models.User.findAll(options);
 
