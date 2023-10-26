@@ -3,6 +3,7 @@ import { resOk } from "../utils/functions.js";
 import { hash } from "bcrypt";
 import { ClientError } from "../utils/errors.js";
 import { models } from "../libs/sequelize.js";
+import { Op } from "sequelize";
 
 export class UserCrll {
   static async create(req = request, res) {
@@ -12,12 +13,14 @@ export class UserCrll {
       },
     });
     if (userFound) throw new ClientError("Email already exists");
+
     const userCreated = await models.User.create({
       ...req.body,
       password: await hash(req.body.password, 10),
       role: "aprendiz",
     });
     delete userCreated.dataValues.password;
+
     resOk(res, { user: userCreated });
   }
 
@@ -34,22 +37,10 @@ export class UserCrll {
       },
     };
 
-    if (document) {
-      options.where = {
-        document,
-      };
-    }
-
-    if (ficha) {
-      options.where = {
-        ficha,
-      };
-    }
-
-    console.log(options);
+    if (document) options.where = { document };
+    if (ficha) options.where = { ficha };
 
     const usersFound = await models.User.findAll(options);
-
     resOk(res, { users: usersFound });
   }
 
@@ -58,6 +49,9 @@ export class UserCrll {
     const userFoundValidateEmail = await models.User.findOne({
       where: {
         email: req.body.email,
+        id: {
+          [Op.ne]: id,
+        },
       },
     });
 
