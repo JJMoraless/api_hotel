@@ -51,6 +51,7 @@ const RegisterShema = {
     type: DataTypes.STRING,
     allowNull: true,
   },
+
   totalProducts: {
     type: DataTypes.VIRTUAL,
     get() {
@@ -71,10 +72,10 @@ const RegisterShema = {
     get() {
       if (!this.reservation) return null;
       const dateEntry = new Date(this.reservation.dateEntry);
-      const dateOutput = new Date(this.reservation.dateOutput)
+      const dateOutput = new Date(this.reservation.dateOutput);
       const diferenciaEnMilisegundos = dateOutput - dateEntry;
       const diferenciaEnDias = diferenciaEnMilisegundos / (1000 * 60 * 60 * 24);
-      return Math.round(diferenciaEnDias)
+      return Math.round(diferenciaEnDias);
     },
   },
 

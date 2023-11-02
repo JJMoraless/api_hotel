@@ -33,7 +33,7 @@ const IventorySchema = {
     onDelete: "CASCADE",
   },
   amount: {
-    allowNull: false,
+    // allowNull: false,
     type: DataTypes.INTEGER,
   },
   createAt: {

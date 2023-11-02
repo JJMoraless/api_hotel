@@ -8,5 +8,5 @@ const amount = Joi.number();
 export const addConsumableSchema = Joi.object({
   productId: productId.required(),
   roomNumber: roomNumber.required(),
-  amount: amount.required(),
+  amount: amount,
 });

@@ -22,7 +22,7 @@ const ReservationShema = {
     onUpdate: "CASCADE",
     onDelete: "CASCADE",
   },
-  priceRoom:{
+  priceRoom: {
     allowNull: false,
     type: DataTypes.INTEGER,
   },
@@ -71,6 +71,9 @@ const ReservationShema = {
   state: {
     type: DataTypes.STRING,
     allowNull: true,
+  },
+  note: {
+    type: DataTypes.TEXT,
   },
   createAt: {
     allowNull: false,

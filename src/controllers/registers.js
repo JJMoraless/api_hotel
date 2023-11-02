@@ -44,12 +44,15 @@ export class RegisterCrll {
 
     const totalProducts = registerFound.totalProducts;
     const totalRoomPerDay = registerFound.totalRoomReserved;
-    const numCompanions = registerFound.companions.reduce((acc, el) => acc + el, 0);
-    console.log("🚀 ~ file: registers.js:48 ~ RegisterCrll ~ getById ~ numCompanions:", numCompanions)
+    const numCompanions = registerFound.companions.reduce(
+      (acc, el) => acc + el,
+      0
+    );
+    console.log(
+      "🚀 ~ file: registers.js:48 ~ RegisterCrll ~ getById ~ numCompanions:",
+      numCompanions
+    );
     // const totalToPay = totalProducts + totalRoomPerDay - totalPayments;
-
-
-
 
     resOk(res, { register: registerFound });
   }
@@ -98,8 +101,7 @@ export class RegisterCrll {
   //     where: { registerId },
   //     raw: true,
   //   });
-    
-    
+
   //   const totalRoomPerDay = register.totalRoomReserved;
   //   const totalProducts = register.totalProducts;
   //   const netTotal = totalProducts + totalRoomPerDay;
@@ -121,7 +123,6 @@ export class RegisterCrll {
   //   });
 
   //   totalPayments = payments.reduce((acc, el) => acc + el.amount, 0);
-
 
   //   resOk(res, {
   //     payments,
@@ -149,19 +150,20 @@ export class RegisterCrll {
         },
       ],
     });
-  
+
     let payments = await models.Payment.findAll({
       where: { registerId },
       raw: true,
     });
-  
+
     const totalRoomPerDay = register.totalRoomReserved;
     const totalProducts = register.totalProducts;
     const netTotal = totalProducts + totalRoomPerDay;
     let totalPayments = payments.reduce((acc, el) => acc + el.amount, 0);
     let totalToPay = netTotal - totalPayments;
-    
-    if (totalToPay > 0) { // Solo si hay saldo pendiente por pagar
+
+    if (totalToPay > 0) {
+      // Solo si hay saldo pendiente por pagar
       const finalAmount = Math.min(amount, totalToPay); // Asegura que no se pague más de lo que se debe
       await models.Payment.create({
         registerId,
@@ -169,23 +171,22 @@ export class RegisterCrll {
         ...dataPayment,
       });
     }
-  
+
     payments = await models.Payment.findAll({
       where: { registerId },
       raw: true,
     });
-  
+
     totalPayments = payments.reduce((acc, el) => acc + el.amount, 0);
     totalToPay = netTotal - totalPayments;
-  
+
     resOk(res, {
       payments,
       totalPayments,
       totalToPay,
-      returnPay: 0, 
+      returnPay: 0,
     });
   }
-  
 
   static async getPayments(req = request, res) {
     const id = Number(req.params.id);
@@ -214,33 +215,33 @@ export class RegisterCrll {
   static async addConsumable(req = request, res) {
     const { productId, registerId, amount } = req.body;
 
-    const register = await models.Register.findByPk(registerId, {
-      include: {
-        model: models.Reservation,
-        as: "reservation",
-        include: "room",
-      },
-    });
+    // const register = await models.Register.findByPk(registerId, {
+    //   include: {
+    //     model: models.Reservation,
+    //     as: "reservation",
+    //     include: "room",
+    //   },
+    // });
 
-    const roomNumber = register.reservation.room.number;
-    const inventory = await models.Inventary.findOne({
-      where: { productId, roomNumber },
-    });
+    // const roomNumber = register.reservation.room.number;
+    // const inventory = await models.Inventary.findOne({
+    //   where: { productId, roomNumber },
+    // });
 
-    if (!inventory) {
-      throw new ClientError("not product in minibar" + roomNumber);
-    }
+    // if (!inventory) {
+    //   throw new ClientError("not product in minibar" + roomNumber);
+    // }
 
-    if (inventory.amount < amount) {
-      throw new ClientError(
-        "available " + inventory.amount + " products in stock"
-      );
-    }
+    // if (inventory.amount < amount) {
+    //   throw new ClientError(
+    //     "available " + inventory.amount + " products in stock"
+    //   );
+    // }
 
-    await models.Inventary.decrement(
-      { amount },
-      { where: { id: inventory.id } }
-    );
+    // await models.Inventary.decrement(
+    //   { amount },
+    //   { where: { id: inventory.id } }
+    // );
 
     const registerProduct = await models.RegisterProduct.findOne({
       where: { productId, registerId },
@@ -258,7 +259,7 @@ export class RegisterCrll {
 
       return resOk(res, {
         consumable: registerProductUpdate,
-        amount_available: inventory.amount - amount,
+        // amount_available: inventory.amount - amount,
       });
     }
 
@@ -269,7 +270,7 @@ export class RegisterCrll {
 
     resOk(res, {
       consumable: newRegisterConsumable,
-      amount_available: inventory.amount - amount,
+      // amount_available: inventory.amount - amount,
     });
   }
 

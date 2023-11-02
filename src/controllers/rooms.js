@@ -53,7 +53,6 @@ export class RoomCrll {
     day = format(day, "yyyy-MM-dd HH:mm:ss");
     midNigth = format(midNigth, "yyyy-MM-dd HH:mm:ss");
 
-
     const roomsFound = await models.Room.findAll({
       include: [
         {
@@ -88,13 +87,13 @@ export class RoomCrll {
       return resOk(res, { inventory: inventory });
     }
 
-    if (amount < 0 && inventory.amount < Math.abs(amount)) {
-      throw new ClientError("no hay tanto para sacar");
-    }
+    // if (amount < 0 && inventory.amount < Math.abs(amount)) {
+    //   throw new ClientError("no hay tanto para sacar");
+    // }
 
     await inventory.increment({ amount });
-    const newInventory = await models.Inventary.findByPk(inventory.id);
-    resOk(res, { inventory: newInventory });
+    const inventoryUpdated = await models.Inventary.findByPk(inventory.id);
+    resOk(res, { inventory: inventoryUpdated });
   }
 
   static async getByIdWithConsumables(req = request, res) {
