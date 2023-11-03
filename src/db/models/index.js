@@ -11,7 +11,11 @@ import {
 import { Inventory, IventorySchema } from "./inventory.model.cjs";
 import { Payment, PaymentSchema } from "./payment.model.cjs";
 import { Todo, TodoSchema } from "./todo.model.cjs";
-import { RegisterCompanion, RegisterCompanionSchema } from "./register-companion.cjs";
+import {
+  RegisterCompanion,
+  RegisterCompanionSchema,
+} from "./register-companion.cjs";
+import { Assistance, AssistanceSchema } from "./assistance.model.cjs";
 
 export const setupModels = (sequelize) => {
   // Creacion modelos
@@ -24,6 +28,7 @@ export const setupModels = (sequelize) => {
   Inventory.init(IventorySchema, Inventory.config(sequelize));
   Payment.init(PaymentSchema, Payment.config(sequelize));
   Todo.init(TodoSchema, Todo.config(sequelize));
+  Assistance.init(AssistanceSchema, Assistance.config(sequelize));
 
   RegisterCompanion.init(
     RegisterCompanionSchema,

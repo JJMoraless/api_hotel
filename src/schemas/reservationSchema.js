@@ -8,6 +8,7 @@ const dateEntry = Joi.date();
 const dateOutput = Joi.date();
 const numChildrens = Joi.number();
 const numAdults = Joi.number();
+const note = Joi.string();
 
 export const postReservationSchema = Joi.object({
   roomNumber: roomNumber.required(),
@@ -31,4 +32,9 @@ export const putReservationSchema = Joi.object({
   dateOutput,
   numChildrens,
   numAdults,
+  note
 });
+
+
+
+

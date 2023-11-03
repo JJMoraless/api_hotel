@@ -41,7 +41,7 @@ const UserShema = {
   state: {
     allowNull: false,
     type: DataTypes.STRING,
-    defaultValue: "active"
+    defaultValue: "active",
   },
   document: {
     allowNull: false,

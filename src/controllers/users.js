@@ -78,5 +78,6 @@ export class UserCrll {
     resOk(res, { user: userFound });
   }
 
+
   static async delete(res, req = request) {}
 }
