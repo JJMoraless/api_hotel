@@ -1,15 +1,15 @@
-import { request } from "express";
-import { resOk } from "../utils/functions.js";
-import { ClientError } from "../utils/errors.js";
-import { models } from "../libs/sequelize.js";
-import { Op } from "sequelize";
+import {request} from 'express'
+import {resOk} from '../utils/functions.js'
+import {ClientError} from '../utils/errors.js'
+import {models} from '../libs/sequelize.js'
+import {Op} from 'sequelize'
 
 export class ReservationCrll {
   static async create(req = request, res) {
-    const { roomNumber, dateEntry, dateOutput } = req.body;
+    const {roomNumber, dateEntry, dateOutput} = req.body
 
     if (new Date(dateOutput) < new Date(dateEntry))
-      throw new ClientError("dates error");
+      throw new ClientError('dates error')
 
     const reservations = await models.Reservation.findAll({
       where: {
@@ -21,94 +21,99 @@ export class ReservationCrll {
         },
         roomNumber,
       },
-    });
+    })
 
     if (reservations.length > 0) {
-      throw new ClientError("habitacion no disponible para esas fechas");
+      throw new ClientError('habitacion no disponible para esas fechas')
     }
 
-    const roomAvaible = await models.Room.findByPk(roomNumber);
+    const roomAvaible = await models.Room.findByPk(roomNumber)
     const reservationCreated = await models.Reservation.create({
       ...req.body,
-      state: "reservada",
+      state: 'reservada',
       priceRoom: roomAvaible.pricePerNight,
-    });
+    })
 
-    resOk(res, { reservation: reservationCreated });
+    resOk(res, {reservation: reservationCreated})
   }
 
   static async getById(req = request, res) {
-    const { id } = req.params;
+    const {id} = req.params
 
     const reservation = await models.Reservation.findByPk(id, {
       include: [
-        { model: models.Room, as: "room" },
+        {model: models.Room, as: 'room'},
 
         {
           model: models.User,
-          as: "user",
-          attributes: { exclude: ["password"] },
+          as: 'user',
+          attributes: {exclude: ['password']},
         },
 
-        { model: models.Host, as: "host" },
-        { model: models.Register, as: "register" },
+        {model: models.Host, as: 'host'},
+        {model: models.Register, as: 'register'},
       ],
-    });
+    })
 
-    resOk(res, { reservation });
+    resOk(res, {reservation})
   }
 
   static async get(req = request, res) {
     const {
       page: queryPage = 0,
       limit: queryLimit = 5,
-      order = "DESC",
-      state = "reservada", // reservada checkIn cancell
-    } = req.query;
+      order = 'DESC',
+      state = 'reservada', // reservada checkIn cancell
+      hostDocument,
+      fechaIngreso
+    } = req.query
 
-    const page = Number(queryPage);
-    const limit = Number(queryLimit);
+    const page = Number(queryPage)
+    const limit = Number(queryLimit)
 
-    const reservation = await models.Reservation.findAll({
+    const options = {
       offset: page ? limit * page : 0,
       limit,
       include: [
-        { model: models.Host, as: "host" },
-        { model: models.Register, as: "register" },
+        {model: models.Host, as: 'host'},
+        {model: models.Register, as: 'register'},
       ],
-      order: [["create_at", order]],
+      order: [['create_at', order]],
       where: {
-        [Op.or]: [{ state: state }, { state: "reservada" }],
+        [Op.or]: [{state: state}, {state: 'reservada'}],
       },
-    });
+    }
 
-    resOk(res, { reservation });
+    if (hostDocument) options.where.hostDocument = hostDocument
+    if(fechaIngreso) options.where.dateEntry = fechaIngreso
+
+    const reservation = await models.Reservation.findAll(options)
+
+    resOk(res, {reservation})
   }
 
   static async update(req = request, res) {
-    const { id } = req.params;
-    const data = req.body;
-
+    const {id} = req.params
+    const data = req.body
     await models.Reservation.update(
-      { ...data },
+      {...data},
       {
         where: {
           id: id,
         },
-      }
-    );
-
-    const reservationsUpdate = await models.Reservation.findByPk(id);
-    resOk(res, { reservation: reservationsUpdate });
+      },
+    )
+    const reservationsUpdate = await models.Reservation.findByPk(id)
+    resOk(res, {reservation: reservationsUpdate})
   }
 
   static async delete(req = request, res) {
-    const { id } = req.params;
+    const {id} = req.params
 
     const reservationDelete = await models.Reservation.destroy({
-      where: { id: id },
-    });
+      where: {id: id},
+    })
 
-    resOk(res, { reservation: reservationDelete });
+    resOk(res, {reservation: reservationDelete})
   }
 }
