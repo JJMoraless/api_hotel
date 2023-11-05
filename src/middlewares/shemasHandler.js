@@ -1,6 +1,6 @@
 import { request, response } from "express";
 
-export const validatorHandler = (schema, property) => {
+export const validatorHandler = (schema , property) => {
   return async (req = request, res = response, next) => {
     try {
       const data = req[property];

@@ -1,81 +1,81 @@
-import { request } from "express";
-import { resOk } from "../utils/functions.js";
-import { models } from "../libs/sequelize.js";
-import { ClientError } from "../utils/errors.js";
+import { request } from 'express'
+import { resOk } from '../utils/functions.js'
+import { models } from '../libs/sequelize.js'
+import { ClientError } from '../utils/errors.js'
 
 export class RegisterCrll {
   static async create(req = request, res) {
-    const { reservationId } = req.body;
+    const { reservationId } = req.body
 
     await models.Reservation.update(
-      { state: "checkIn" },
+      { state: 'checkIn' },
       {
         where: {
           id: reservationId,
         },
       }
-    );
+    )
 
     const registerCreated = await models.Register.create(req.body, {
-      include: ["reservation"],
-    });
+      include: ['reservation'],
+    })
 
-    resOk(res, { register: registerCreated });
+    resOk(res, { register: registerCreated })
   }
 
   static async get(req = request, res) {
-    let { page = 0, limit = 100 } = req.query;
-    page = Number(page);
-    limit = Number(limit);
+    let { page = 0, limit = 100 } = req.query
+    page = parseInt(page)
+    limit = parseInt(limit)
+
     const registersFound = await models.Register.findAll({
       offset: page ? limit * page : 0,
       limit,
-      include: ["reservation"],
-      order: [["id", "DESC"]],
-    });
-    resOk(res, { registers: registersFound });
+      include: ['reservation'],
+      order: [['id', 'DESC']],
+    })
+
+    resOk(res, { registers: registersFound })
   }
 
   static async getById(req = request, res) {
-    const { id } = req.params;
+    const { id } = req.params
     const registerFound = await models.Register.findByPk(Number(id), {
-      include: ["reservation", "products", "payments", "companions"],
-    });
+      include: ['reservation', 'products', 'payments', 'companions'],
+    })
 
-    const totalProducts = registerFound.totalProducts;
-    const totalRoomPerDay = registerFound.totalRoomReserved;
+    const totalProducts = registerFound.totalProducts
+    const totalRoomPerDay = registerFound.totalRoomReserved
     const numCompanions = registerFound.companions.reduce(
       (acc, el) => acc + el,
       0
-    );
-    console.log(
-      "🚀 ~ file: registers.js:48 ~ RegisterCrll ~ getById ~ numCompanions:",
-      numCompanions
-    );
+    )
+
     // const totalToPay = totalProducts + totalRoomPerDay - totalPayments;
 
-    resOk(res, { register: registerFound });
+    resOk(res, { register: registerFound })
   }
 
   static async getByIdWithProducts(req = request, res) {
-    const { id } = req.params;
-    const registerFound = await models.Register.findByPk(Number(id), {
+    const { id } = req.params
+    const registerFound = await models.Register.findByPk(parseInt(id), {
       include: [
         {
           model: models.Product,
-          as: "products",
+          as: 'products',
         },
         {
           model: models.Reservation,
-          as: "reservation",
+          as: 'reservation',
         },
       ],
-    });
-    resOk(res, { register: registerFound });
+    })
+
+    resOk(res, { register: registerFound })
   }
 
   static async update(res, req = request) {
-    resOk(res, {});
+    resOk(res, {})
   }
 
   // static async addPayment(req = request, res) {
@@ -133,87 +133,88 @@ export class RegisterCrll {
   // }
 
   static async addPayment(req = request, res) {
-    const { registerId, amount, ...dataPayment } = await req.body;
+    const { registerId, amount, ...dataPayment } = await req.body
+
     const register = await models.Register.findByPk(registerId, {
       include: [
         {
           model: models.Reservation,
-          as: "reservation",
+          as: 'reservation',
         },
         {
           model: models.Payment,
-          as: "payments",
+          as: 'payments',
         },
         {
           model: models.Product,
-          as: "products",
+          as: 'products',
         },
       ],
-    });
+    })
 
     let payments = await models.Payment.findAll({
       where: { registerId },
       raw: true,
-    });
+    })
 
-    const totalRoomPerDay = register.totalRoomReserved;
-    const totalProducts = register.totalProducts;
-    const netTotal = totalProducts + totalRoomPerDay;
-    let totalPayments = payments.reduce((acc, el) => acc + el.amount, 0);
-    let totalToPay = netTotal - totalPayments;
+    const totalRoomPerDay = register.totalRoomReserved
+    const totalProducts = register.totalProducts
+    const netTotal = totalProducts + totalRoomPerDay
+    let totalPayments = payments.reduce((acc, el) => acc + el.amount, 0)
+    let totalToPay = netTotal - totalPayments
 
     if (totalToPay > 0) {
       // Solo si hay saldo pendiente por pagar
-      const finalAmount = Math.min(amount, totalToPay); // Asegura que no se pague más de lo que se debe
+      const finalAmount = Math.min(amount, totalToPay) // Asegura que no se pague más de lo que se debe
       await models.Payment.create({
         registerId,
         amount: finalAmount,
         ...dataPayment,
-      });
+      })
     }
 
     payments = await models.Payment.findAll({
       where: { registerId },
       raw: true,
-    });
+    })
 
-    totalPayments = payments.reduce((acc, el) => acc + el.amount, 0);
-    totalToPay = netTotal - totalPayments;
+    totalPayments = payments.reduce((acc, el) => acc + el.amount, 0)
+    totalToPay = netTotal - totalPayments
 
     resOk(res, {
       payments,
       totalPayments,
       totalToPay,
       returnPay: 0,
-    });
+    })
   }
 
   static async getPayments(req = request, res) {
-    const id = Number(req.params.id);
+    const id = Number(req.params.id)
     const register = await models.Register.findByPk(id, {
-      include: ["payments", "reservation", "products"],
-    });
+      include: ['payments', 'reservation', 'products'],
+    })
 
-    resOk(res, { register });
+    resOk(res, { register })
   }
 
   static async addCompanion(req = request, res) {
-    const { registerId, companionId } = await req.body;
+    const { registerId, companionId } = await req.body
 
     await models.RegisterCompanion.create({
       registerId,
       companionId,
-    });
+    })
 
     const register = await models.Register.findByPk(registerId, {
-      include: "companions",
-    });
+      include: 'companions',
+    })
 
-    resOk(res, { register });
+    resOk(res, { register })
   }
 
   static async addConsumable(req = request, res) {
-    const { productId, registerId, amount } = req.body;
+    const { productId, registerId, amount } = req.body
 
     // const register = await models.Register.findByPk(registerId, {
     //   include: {
@@ -245,33 +246,33 @@ export class RegisterCrll {
 
     const registerProduct = await models.RegisterProduct.findOne({
       where: { productId, registerId },
-    });
+    })
 
-    const product = await models.Product.findByPk(Number(productId));
+    const product = await models.Product.findByPk(Number(productId))
 
     if (registerProduct) {
-      await registerProduct.increment({ amount });
+      await registerProduct.increment({ amount })
       // await registerProduct.update({ price: product.price });
 
       const registerProductUpdate = await models.RegisterProduct.findByPk(
         registerProduct.id
-      );
+      )
 
       return resOk(res, {
         consumable: registerProductUpdate,
         // amount_available: inventory.amount - amount,
-      });
+      })
     }
 
     const newRegisterConsumable = await models.RegisterProduct.create({
       ...req.body,
       price: product.price,
-    });
+    })
 
     resOk(res, {
       consumable: newRegisterConsumable,
       // amount_available: inventory.amount - amount,
-    });
+    })
   }
 
   static async delete(res, req = request) {}
