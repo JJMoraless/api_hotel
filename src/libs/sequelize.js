@@ -1,17 +1,18 @@
-import { Sequelize } from "sequelize";
-import { setupModels } from "../db/models/index.js";
+import {Sequelize} from 'sequelize'
+import {setupModels} from '../db/models/index.js'
 
-const DB_NAME = process.env.DB_NAME;
-const USER = process.env.USER;
-const PASSWORD = process.env.PASSWORD;
+const DB_NAME = process.env.DB_NAME
+const USER = process.env.USER
+const PASSWORD = process.env.PASSWORD
 
 const sequelize = new Sequelize(DB_NAME, USER, PASSWORD, {
-  host: "localhost",
-  dialect: "mysql",
+  host: 'localhost',
+  dialect: 'mysql',
   logging: false,
-});
+  timezone: 'America/Bogota',
+})
 
-setupModels(sequelize);
+setupModels(sequelize)
 
-export const models = sequelize.models;
-export default sequelize;
+export const models = sequelize.models
+export default sequelize
