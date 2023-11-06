@@ -45,4 +45,5 @@ export const setupModels = (sequelize) => {
   Room.associate(sequelize.models);
   Register.associate(sequelize.models);
   Product.associate(sequelize.models);
+  Assistance.associate(sequelize.models);
 };
