@@ -23,9 +23,8 @@ export class ReservationCrll {
       },
     })
 
-    if (reservations.length > 0) {
+    if (reservations.length > 0)
       throw new ClientError('habitacion no disponible para esas fechas')
-    }
 
     const roomAvaible = await models.Room.findByPk(roomNumber)
     const reservationCreated = await models.Reservation.create({
@@ -65,7 +64,7 @@ export class ReservationCrll {
       order = 'DESC',
       state = 'reservada', // reservada checkIn cancell
       hostDocument,
-      fechaIngreso
+      fechaIngreso,
     } = req.query
 
     const page = Number(queryPage)
@@ -85,7 +84,7 @@ export class ReservationCrll {
     }
 
     if (hostDocument) options.where.hostDocument = hostDocument
-    if(fechaIngreso) options.where.dateEntry = fechaIngreso
+    if (fechaIngreso) options.where.dateEntry = fechaIngreso
 
     const reservation = await models.Reservation.findAll(options)
 

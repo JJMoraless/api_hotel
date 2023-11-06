@@ -18,6 +18,6 @@ export class AuthCrll {
     const asistance = await models.Assistance.create({userId: user.id})
 
     res.cookie("token", token);
-    resOk(res, { token, user });
+    resOk(res, { token, user, asistance });
   }
 }
