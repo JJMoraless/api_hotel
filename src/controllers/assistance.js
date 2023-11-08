@@ -17,6 +17,7 @@ export class AssistanceCrll {
     const assistanceId = parseInt(req.params.id)
     await models.Assistance.update(req.body, {where: {id: assistanceId}})
     const updatedAssistance = await models.Assistance.findByPk(assistanceId)
+    console.log("🚀 ~ file: assistance.js:20 ~ AssistanceCrll ~ put ~ updatedAssistance:", updatedAssistance)
     resOk(res, {assistance: updatedAssistance})
   }
 

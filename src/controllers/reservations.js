@@ -8,8 +8,9 @@ export class ReservationCrll {
   static async create(req = request, res) {
     const {roomNumber, dateEntry, dateOutput} = req.body
 
-    if (new Date(dateOutput) < new Date(dateEntry))
+    if (new Date(dateOutput) < new Date(dateEntry)) {
       throw new ClientError('dates error')
+    }
 
     const reservations = await models.Reservation.findAll({
       where: {
@@ -23,14 +24,24 @@ export class ReservationCrll {
       },
     })
 
-    if (reservations.length > 0)
+    if (reservations.length > 0) {
       throw new ClientError('habitacion no disponible para esas fechas')
+    }
+
+    const rates = await models.Rate.findAll({
+      raw: true,
+    })
+
+    const executivePrice = rates.find((rate) => rate.type === 'ejecutivo').price
+    const regularPrice = rates.find((rate) => rate.type === 'regular').price
 
     const roomAvaible = await models.Room.findByPk(roomNumber)
     const reservationCreated = await models.Reservation.create({
       ...req.body,
       state: 'reservada',
       priceRoom: roomAvaible.pricePerNight,
+      executivePrice,
+      regularPrice,
     })
 
     resOk(res, {reservation: reservationCreated})

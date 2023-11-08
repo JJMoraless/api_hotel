@@ -1,9 +1,9 @@
-const { DataTypes, Model, Sequelize } = require("sequelize");
-const { ROOM_TABLE } = require("./room.model.cjs");
-const { USER_TABLE } = require("./user.model.cjs");
-const { HOST_TABLE } = require("./host.model.cjs");
+const {DataTypes, Model, Sequelize} = require('sequelize')
+const {ROOM_TABLE} = require('./room.model.cjs')
+const {USER_TABLE} = require('./user.model.cjs')
+const {HOST_TABLE} = require('./host.model.cjs')
 
-const RESERVATION_TABLE = "reservations";
+const RESERVATION_TABLE = 'reservations'
 const ReservationShema = {
   id: {
     allowNull: false,
@@ -12,15 +12,15 @@ const ReservationShema = {
     type: DataTypes.INTEGER,
   },
   roomNumber: {
-    field: "room_number",
+    field: 'room_number',
     allowNull: false,
     type: DataTypes.INTEGER,
     references: {
       model: ROOM_TABLE,
-      key: "number",
+      key: 'number',
     },
-    onUpdate: "CASCADE",
-    onDelete: "CASCADE",
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
   },
   priceRoom: {
     allowNull: false,
@@ -28,45 +28,45 @@ const ReservationShema = {
   },
   userId: {
     allowNull: false,
-    field: "user_id",
+    field: 'user_id',
     type: DataTypes.INTEGER,
     references: {
       model: USER_TABLE,
-      key: "id",
+      key: 'id',
     },
-    onUpdate: "CASCADE",
-    onDelete: "CASCADE",
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
   },
   hostDocument: {
     allowNull: false,
-    field: "host_document",
+    field: 'host_document',
     type: DataTypes.STRING,
     references: {
       model: HOST_TABLE,
-      key: "document",
+      key: 'document',
     },
-    onUpdate: "CASCADE",
-    onDelete: "CASCADE",
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
   },
   dateEntry: {
     type: DataTypes.DATE,
     allowNull: false,
-    field: "date_entry",
+    field: 'date_entry',
   },
   dateOutput: {
     type: DataTypes.DATE,
     allowNull: false,
-    field: "date_output",
+    field: 'date_output',
   },
   numChildrens: {
     type: DataTypes.INTEGER,
     allowNull: true,
-    field: "num_childres",
+    field: 'num_childres',
   },
   numAdults: {
     type: DataTypes.INTEGER,
     allowNull: true,
-    field: "num_adults",
+    field: 'num_adults',
   },
   state: {
     type: DataTypes.STRING,
@@ -75,33 +75,41 @@ const ReservationShema = {
   note: {
     type: DataTypes.TEXT,
   },
+  regularPrice: {
+    type: DataTypes.INTEGER,
+    field: 'regular_price',
+  },
+  executivePrice: {
+    type: DataTypes.INTEGER,
+    field: 'executive_price',
+  },
   createAt: {
     allowNull: false,
     type: DataTypes.DATE,
-    field: "create_at",
-    defaultValue: Sequelize.fn("now"),
+    field: 'create_at',
+    defaultValue: Sequelize.fn('now'),
   },
-};
+}
 
 class Reservation extends Model {
   static associate(models) {
-    this.belongsTo(models.Room, { as: "room" });
-    this.belongsTo(models.User, { as: "user" });
-    this.belongsTo(models.Host, { as: "host" });
+    this.belongsTo(models.Room, {as: 'room'})
+    this.belongsTo(models.User, {as: 'user'})
+    this.belongsTo(models.Host, {as: 'host'})
     this.hasOne(models.Register, {
-      as: "register",
-      foreignKey: "reservationId",
-    });
+      as: 'register',
+      foreignKey: 'reservationId',
+    })
   }
 
   static config(sequelize) {
     return {
       sequelize,
       tableName: RESERVATION_TABLE,
-      modelName: "Reservation",
+      modelName: 'Reservation',
       timestamps: false,
-    };
+    }
   }
 }
 
-module.exports = { RESERVATION_TABLE, ReservationShema, Reservation };
+module.exports = {RESERVATION_TABLE, ReservationShema, Reservation}

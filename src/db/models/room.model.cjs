@@ -1,5 +1,6 @@
-const { DataTypes, Model, Sequelize } = require("sequelize");
-const ROOM_TABLE = "rooms";
+const {RATE_TABLE} = require('./rate.model.cjs')
+const {DataTypes, Model, Sequelize} = require('sequelize')
+const ROOM_TABLE = 'rooms'
 const RoomShema = {
   number: {
     allowNull: false,
@@ -9,7 +10,7 @@ const RoomShema = {
   pricePerNight: {
     allowNull: false,
     type: DataTypes.INTEGER,
-    field: "price_per_night",
+    field: 'price_per_night',
   },
   floor: {
     allowNull: false,
@@ -30,39 +31,41 @@ const RoomShema = {
   imgUrl: {
     allowNull: false,
     type: DataTypes.STRING,
-    field: "img_url",
+    field: 'img_url',
   },
   createAt: {
     allowNull: false,
     type: DataTypes.DATE,
-    field: "create_at",
-    defaultValue: Sequelize.fn("now"),
+    field: 'create_at',
+    defaultValue: Sequelize.fn('now'),
   },
-};
-
+}
 class Room extends Model {
   static associate(models) {
     this.hasMany(models.Reservation, {
-      foreignKey: "roomNumber",
-      as: "reservations",
-    });
+      foreignKey: 'roomNumber',
+      as: 'reservations',
+    })
 
     this.belongsToMany(models.Product, {
       through: models.Inventary,
-      as: "products",
-      foreignKey: "roomNumber",
-      otherKey: "productId",
-    });
+      as: 'products',
+      foreignKey: 'roomNumber',
+      otherKey: 'productId',
+    })
   }
-
   static config(sequelize) {
     return {
       sequelize,
       tableName: ROOM_TABLE,
-      modelName: "Room",
+      modelName: 'Room',
       timestamps: false,
-    };
+    }
   }
 }
 
-module.exports = { ROOM_TABLE, RoomShema, Room };
+module.exports = {
+  ROOM_TABLE,
+  RoomShema,
+  Room,
+}

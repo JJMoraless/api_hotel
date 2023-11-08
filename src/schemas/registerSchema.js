@@ -8,6 +8,9 @@ const travel_reason = Joi.string();
 const method = Joi.string();
 const document = Joi.string();
 const note = Joi.string();
+const discount = Joi.number().integer();
+const rateId = Joi.number().integer();
+const priceSelected = Joi.string()
 
 export const getRegisterSchema = Joi.object({
   id: id.required(),
@@ -19,6 +22,12 @@ export const postRegisterSchema = Joi.object({
   travel_reason: travel_reason.required(),
   note
 });
+
+export const putRegisterSchema = Joi.object({
+  discount,
+  rateId, 
+  priceSelected
+})
 
 export const addProductShema = Joi.object({
   registerId: id.required(),

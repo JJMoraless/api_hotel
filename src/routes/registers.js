@@ -1,40 +1,49 @@
-import { Router } from "express";
-import { wrapError } from "../middlewares/errorsHandler.js";
-import { RegisterCrll } from "../controllers/registers.js";
-import { validatorHandler } from "../middlewares/shemasHandler.js";
+import {Router} from 'express'
+import {wrapError} from '../middlewares/errorsHandler.js'
+import {RegisterCrll} from '../controllers/registers.js'
+import {validatorHandler} from '../middlewares/shemasHandler.js'
 import {
   addCompanionShcema,
   addPaymentShema,
   addProductShema,
+  getRegisterSchema,
   postRegisterSchema,
-} from "../schemas/registerSchema.js";
-export const router = Router();
+  putRegisterSchema,
+} from '../schemas/registerSchema.js'
+export const router = Router()
 
 router.post(
-  "/",
-  validatorHandler(postRegisterSchema, "body"),
-  wrapError(RegisterCrll.create)
-);
+  '/',
+  validatorHandler(postRegisterSchema, 'body'),
+  wrapError(RegisterCrll.create),
+)
+
+router.put(
+  '/:id',
+  validatorHandler(getRegisterSchema, 'params'),
+  validatorHandler(putRegisterSchema, 'body'),
+  wrapError(RegisterCrll.put),
+)
 
 router.post(
-  "/add-consumable",
-  validatorHandler(addProductShema, "body"),
-  wrapError(RegisterCrll.addConsumable)
-);
+  '/add-consumable',
+  validatorHandler(addProductShema, 'body'),
+  wrapError(RegisterCrll.addConsumable),
+)
 
 router.post(
-  "/add-payment",
-  validatorHandler(addPaymentShema, "body"),
-  wrapError(RegisterCrll.addPayment)
-);
+  '/add-payment',
+  validatorHandler(addPaymentShema, 'body'),
+  wrapError(RegisterCrll.addPayment),
+)
 
 router.post(
-  "/add-companion",
-  validatorHandler(addCompanionShcema, "body"),
-  wrapError(RegisterCrll.addCompanion)
-);
+  '/add-companion',
+  validatorHandler(addCompanionShcema, 'body'),
+  wrapError(RegisterCrll.addCompanion),
+)
 
-router.get("/:id/products", wrapError(RegisterCrll.getByIdWithProducts));
-router.get("/:id", wrapError(RegisterCrll.getById));
-router.get("/", wrapError(RegisterCrll.get));
-router.get("/:id/payments", wrapError(RegisterCrll.getPayments));
+router.get('/:id/products', wrapError(RegisterCrll.getByIdWithProducts))
+router.get('/:id', wrapError(RegisterCrll.getById))
+router.get('/', wrapError(RegisterCrll.get))
+router.get('/:id/payments', wrapError(RegisterCrll.getPayments))

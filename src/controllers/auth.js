@@ -16,6 +16,7 @@ export class AuthCrll {
     });
     
     const asistance = await models.Assistance.create({userId: user.id})
+    console.log("🚀 ~ file: auth.js:19 ~ AuthCrll ~ login ~ asistance:", asistance)
     res.cookie("token", token);
     resOk(res, { token, user, asistance });
   }
