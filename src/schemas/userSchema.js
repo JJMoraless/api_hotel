@@ -1,15 +1,15 @@
-import Joi from "joi";
+import Joi from 'joi'
 
-const id = Joi.number().integer();
-const name = Joi.string().min(3).max(30);
-const email = Joi.string().email();
-const password = Joi.string();
-const numberPhone = Joi.string();
-const role = Joi.string();
-const addres = Joi.string();
-const ficha = Joi.string();
-const state = Joi.string();
-const document = Joi.string();
+const id = Joi.number().integer()
+const name = Joi.string().min(3).max(30)
+const email = Joi.string().email()
+const password = Joi.string()
+const numberPhone = Joi.string()
+const role = Joi.string()
+const addres = Joi.string()
+const ficha = Joi.string()
+const state = Joi.string()
+const document = Joi.string()
 
 export const postUserShema = Joi.object({
   email: email.required(),
@@ -20,11 +20,11 @@ export const postUserShema = Joi.object({
   addres: addres.required(),
   ficha: ficha.required(),
   document: document.required(),
-});
+})
 
 export const getUserShema = Joi.object({
   id: id.required(),
-});
+})
 
 export const putUserShema = Joi.object({
   email,
@@ -35,10 +35,22 @@ export const putUserShema = Joi.object({
   addres,
   ficha,
   state,
-  document
-});
+  document,
+})
 
 export const loginUserShema = Joi.object({
   email: email.required(),
   password: password.required(),
-});
+})
+
+const code = Joi.string()
+export const authUserSchema = Joi.object({
+  email: email.required(),
+  password: password.required(),
+  code: code.required(),
+})
+
+
+export const forgotPasswordSchema = Joi.object({
+  email: email.required(),
+})

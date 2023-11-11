@@ -31,6 +31,7 @@ export const setupModels = (sequelize) => {
   Todo.init(TodoSchema, Todo.config(sequelize))
   Assistance.init(AssistanceSchema, Assistance.config(sequelize))
   Rate.init(RateSchema, Rate.config(sequelize))
+  
 
   RegisterCompanion.init(
     RegisterCompanionSchema,

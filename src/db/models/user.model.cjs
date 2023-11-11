@@ -12,6 +12,10 @@ const UserShema = {
     allowNull: true,
     type: DataTypes.STRING(40),
   },
+  codeReset: {
+    type: DataTypes.STRING(250),
+    field: "code_reset",
+  },
   name: {
     allowNull: false,
     type: DataTypes.STRING(100),

@@ -1,5 +1,4 @@
 "use strict";
-
 const { faker } = require("@faker-js/faker");
 
 /** @type {import('sequelize-cli').Migration} */

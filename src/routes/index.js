@@ -20,6 +20,7 @@ const filesNames = readdirSync(PATH_ROUTERS);
 filesNames.forEach(async (fileName) => {
   const cleanName = cleanFile(fileName);
   if (cleanName === "index") return;
+  
   const moduleRouter = await import(`./${fileName}`);
   router.use(`/${cleanName}`, moduleRouter.router);
   console.log(cleanName);
