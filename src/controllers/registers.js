@@ -3,6 +3,7 @@ import {resOk} from '../utils/functions.js'
 import {models} from '../libs/sequelize.js'
 import {ClientError} from '../utils/errors.js'
 import {Op} from 'sequelize'
+import {parseJSON} from 'date-fns'
 
 export class RegisterCrll {
   static async create(req = request, res) {
@@ -48,22 +49,19 @@ export class RegisterCrll {
 
     // filter by date entry and date output in reservation
     if (dateStart && dateEnd) {
-      options.include.push(
-        {
-          model: models.Reservation,
-          as: 'reservation',
-          where: {
-            dateEntry: {
-              [Op.gte]: new Date(dateStart),
-            },
-            dateOutput: {
-              [Op.lte]: new Date(dateEnd),
-            },
+      options.include.push({
+        model: models.Reservation,
+        as: 'reservation',
+        where: {
+          dateEntry: {
+            [Op.gte]: new Date(dateStart),
           },
-        }
-      ) 
+          dateOutput: {
+            [Op.lte]: new Date(dateEnd),
+          },
+        },
+      })
     }
-    
 
     const registersFound = await models.Register.findAll(options)
 
@@ -195,6 +193,7 @@ export class RegisterCrll {
           model: models.Product,
           as: 'products',
         },
+        'companions',
       ],
     })
 
@@ -203,19 +202,29 @@ export class RegisterCrll {
       raw: true,
     })
 
-    const totalRoomPerDay = register.totalRoomReserved
-    console.log(
-      '🚀 ~ file: registers.js:183 ~ RegisterCrll ~ addPayment ~ register.totalRoomReserved:',
-      register.totalRoomReserved,
-    )
+    const days = register.daysReserved
+
+    const numberGuestsByRoom = register.companions.length + 1
     const totalProducts = register.totalProducts
-    const netTotal = totalProducts + totalRoomPerDay
+    const registerRate =
+      register.priceSelected === 'ejecutivo'
+        ? register.executivePrice
+        : register.regularPrice
+
+    let totalStay = days * registerRate * numberGuestsByRoom
+    let totalBrute = totalStay + totalProducts
+    let discount = register.discount
+    if (discount > 0) {
+      discount = (discount / 100) * totalStay
+    }
+    const netTotal = totalBrute - discount
     let totalPayments = payments.reduce((acc, el) => acc + el.amount, 0)
     let totalToPay = netTotal - totalPayments
 
     if (totalToPay > 0) {
       // Solo si hay saldo pendiente por pagar
-      const finalAmount = Math.min(amount, totalToPay) // Asegura que no se pague más de lo que se debe
+      // Asegura que no se pague más de lo que se debe
+      const finalAmount = Math.min(amount, totalToPay)
       await models.Payment.create({
         registerId,
         amount: finalAmount,
