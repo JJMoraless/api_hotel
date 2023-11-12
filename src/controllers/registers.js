@@ -2,7 +2,7 @@ import {request} from 'express'
 import {resOk} from '../utils/functions.js'
 import {models} from '../libs/sequelize.js'
 import {ClientError} from '../utils/errors.js'
-import { Op } from 'sequelize'
+import {Op} from 'sequelize'
 
 export class RegisterCrll {
   static async create(req = request, res) {
@@ -42,23 +42,28 @@ export class RegisterCrll {
     const options = {
       offset: page ? limit * page : 0,
       limit,
-      include: ['reservation'],
+      include: ['reservation', 'products', 'companions', 'rate'],
       order: [['id', 'DESC']],
     }
 
     // filter by date entry and date output in reservation
     if (dateStart && dateEnd) {
-      dateStart = new Date(dateStart)
-      dateEnd = new Date(dateEnd)
-      options.where = {
-        '$reservation.date_entry$': {
-          [Op.lte]: dateEnd,
-        },
-        '$reservation.date_output$': {
-          [Op.gte]: dateStart,
-        },
-      }
+      options.include.push(
+        {
+          model: models.Reservation,
+          as: 'reservation',
+          where: {
+            dateEntry: {
+              [Op.gte]: new Date(dateStart),
+            },
+            dateOutput: {
+              [Op.lte]: new Date(dateEnd),
+            },
+          },
+        }
+      ) 
     }
+    
 
     const registersFound = await models.Register.findAll(options)
 
