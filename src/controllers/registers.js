@@ -2,6 +2,7 @@ import {request} from 'express'
 import {resOk} from '../utils/functions.js'
 import {models} from '../libs/sequelize.js'
 import {ClientError} from '../utils/errors.js'
+import { Op } from 'sequelize'
 
 export class RegisterCrll {
   static async create(req = request, res) {
@@ -33,16 +34,33 @@ export class RegisterCrll {
   }
 
   static async get(req = request, res) {
-    let {page = 0, limit = 100} = req.query
+    let {page = 0, limit = 10000} = req.query
+    let {dateStart, dateEnd} = req.query
     page = parseInt(page)
     limit = parseInt(limit)
 
-    const registersFound = await models.Register.findAll({
+    const options = {
       offset: page ? limit * page : 0,
       limit,
       include: ['reservation'],
       order: [['id', 'DESC']],
-    })
+    }
+
+    // filter by date entry and date output in reservation
+    if (dateStart && dateEnd) {
+      dateStart = new Date(dateStart)
+      dateEnd = new Date(dateEnd)
+      options.where = {
+        '$reservation.date_entry$': {
+          [Op.lte]: dateEnd,
+        },
+        '$reservation.date_output$': {
+          [Op.gte]: dateStart,
+        },
+      }
+    }
+
+    const registersFound = await models.Register.findAll(options)
 
     resOk(res, {registers: registersFound})
   }
@@ -68,6 +86,7 @@ export class RegisterCrll {
 
     const totalProducts = registerFound.totalProducts
     const totalRoomPerDay = registerFound.totalRoomReserved
+
     const numCompanions = registerFound.companions.reduce(
       (acc, el) => acc + el,
       0,
