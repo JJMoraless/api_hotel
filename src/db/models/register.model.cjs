@@ -104,17 +104,6 @@ const RegisterShema = {
       return Math.round(diferenciaEnDias)
     },
   },
-  // daysStayed: {
-  //   type: DataTypes.VIRTUAL,
-  //   get() {
-  //     if (!this.reservation) return 0;
-  //     const dateEntry = new Date(this.createdAt);
-  //     const dateOutput = new Date(this.updatedAt);
-  //     const diferenciaEnMilisegundos = dateOutput - dateEntry;
-  //     const diferenciaEnDias = diferenciaEnMilisegundos / (1000 * 60 * 60 * 24);
-  //     return diferenciaEnDias;
-  //   },
-  // },
 
   totalRoomReserved: {
     type: DataTypes.VIRTUAL,

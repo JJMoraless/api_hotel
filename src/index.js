@@ -1,3 +1,3 @@
-import Server from "./server.js";
-const server = new Server();
-server.listen();
+import Server from './server.js'
+const server = new Server()
+server.listen()

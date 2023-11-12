@@ -180,6 +180,10 @@ export class RegisterCrll {
     })
 
     const totalRoomPerDay = register.totalRoomReserved
+    console.log(
+      '🚀 ~ file: registers.js:183 ~ RegisterCrll ~ addPayment ~ register.totalRoomReserved:',
+      register.totalRoomReserved,
+    )
     const totalProducts = register.totalProducts
     const netTotal = totalProducts + totalRoomPerDay
     let totalPayments = payments.reduce((acc, el) => acc + el.amount, 0)
@@ -208,6 +212,7 @@ export class RegisterCrll {
       totalPayments,
       totalToPay,
       returnPay: 0,
+      register,
     })
   }
 

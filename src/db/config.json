@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": null,
-    "database": "db_api_hotel",
+    "database": "db_api_hotel_3",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
