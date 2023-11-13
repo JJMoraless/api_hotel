@@ -7,6 +7,8 @@ const pricePerNight = Joi.number().integer()
 const description = Joi.string()
 const type = Joi.string()
 const amount = Joi.number().integer()
+const imageUrl = Joi.string()
+const floor = Joi.number().integer()
 
 export const addConsumableSchema = Joi.object({
   productId: productId.required(),
@@ -22,4 +24,6 @@ export const putRoomSchema = Joi.object({
   pricePerNight,
   description,
   type,
+  imageUrl,
+  floor,
 })

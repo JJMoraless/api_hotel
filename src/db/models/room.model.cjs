@@ -1,6 +1,7 @@
 const {RATE_TABLE} = require('./rate.model.cjs')
 const {DataTypes, Model, Sequelize} = require('sequelize')
 const ROOM_TABLE = 'rooms'
+
 const RoomShema = {
   number: {
     allowNull: false,

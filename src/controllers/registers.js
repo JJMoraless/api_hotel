@@ -178,7 +178,6 @@ export class RegisterCrll {
 
   static async addPayment(req = request, res) {
     const {registerId, amount, ...dataPayment} = await req.body
-
     const register = await models.Register.findByPk(registerId, {
       include: [
         {
@@ -201,16 +200,13 @@ export class RegisterCrll {
       where: {registerId},
       raw: true,
     })
-
     const days = register.daysReserved
-
     const numberGuestsByRoom = register.companions.length + 1
     const totalProducts = register.totalProducts
     const registerRate =
       register.priceSelected === 'ejecutivo'
         ? register.executivePrice
         : register.regularPrice
-
     let totalStay = days * registerRate * numberGuestsByRoom
     let totalBrute = totalStay + totalProducts
     let discount = register.discount

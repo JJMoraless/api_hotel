@@ -6,7 +6,11 @@ import {Op} from 'sequelize'
 import {format} from 'date-fns'
 
 export class RoomCrll {
-  static async create(req = request, res) {}
+static async create(req = request, res) {
+  const requestData = req.body;
+  const room = await models.Room.create(requestData);
+  resOk(res, { room });
+}
 
   static async getAvailable(req = request, res) {
     const {date_entry, date_output} = req.query
