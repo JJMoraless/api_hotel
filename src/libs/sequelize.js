@@ -1,12 +1,14 @@
 import {Sequelize} from 'sequelize'
 import {setupModels} from '../db/models/index.js'
 
-const DB_NAME = process.env.DB_NAME
-const DB_USER = process.env.DB_USER
+const PORT = process.env.DB_PORT
 const PASSWORD = process.env.PASSWORD
+const DATABASE = process.env.DB_NAME
+const HOST = process.env.DB_HOST
+const USER = process.env.DB_USER
 
-const sequelize = new Sequelize(DB_NAME, DB_USER, PASSWORD, {
-  host: 'localhost',
+const sequelize = new Sequelize(DATABASE, USER, PASSWORD, {
+  host: HOST,
   dialect: 'mysql',
   logging: false,
   timezone: 'America/Bogota',
