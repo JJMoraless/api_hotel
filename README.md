@@ -11,7 +11,6 @@ sistematiza la gestion hotelera en la escuala con:
 - gestion de huespedes
 - comprobantes de pago
 - consumos y estadias de huespedes
-- estadisticas por mes
 
 ## Installation
 
