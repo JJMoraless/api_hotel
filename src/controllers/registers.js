@@ -203,10 +203,12 @@ export class RegisterCrll {
     const days = register.daysReserved
     const numberGuestsByRoom = register.companions.length + 1
     const totalProducts = register.totalProducts
+    
     const registerRate =
       register.priceSelected === 'ejecutivo'
         ? register.executivePrice
         : register.regularPrice
+
     let totalStay = days * registerRate * numberGuestsByRoom
     let totalBrute = totalStay + totalProducts
     let discount = register.discount

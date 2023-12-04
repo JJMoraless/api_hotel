@@ -1,5 +1,5 @@
-const { DataTypes, Model, Sequelize } = require("sequelize");
-const PRODUCT_TABLE = "products";
+const { DataTypes, Model, Sequelize } = require('sequelize')
+const PRODUCT_TABLE = 'products'
 
 const productSchema = {
   id: {
@@ -19,14 +19,18 @@ const productSchema = {
   createAt: {
     allowNull: false,
     type: DataTypes.DATE,
-    field: "create_at",
-    defaultValue: Sequelize.fn("now"),
+    field: 'create_at',
+    defaultValue: Sequelize.fn('now'),
   },
   price: {
     allowNull: false,
     type: DataTypes.INTEGER,
   },
-};
+  state: {
+    allowNull: true,
+    type: DataTypes.BOOLEAN,
+  },
+}
 
 class Product extends Model {
   static associate(models) {}
@@ -34,10 +38,10 @@ class Product extends Model {
     return {
       sequelize,
       tableName: PRODUCT_TABLE,
-      modelName: "Product",
+      modelName: 'Product',
       timestamps: false,
-    };
+    }
   }
 }
 
-module.exports = { PRODUCT_TABLE, productSchema, Product };
+module.exports = { PRODUCT_TABLE, productSchema, Product }

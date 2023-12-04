@@ -1,12 +1,12 @@
-import {request} from 'express'
-import {resOk} from '../utils/functions.js'
-import {ClientError} from '../utils/errors.js'
-import {models} from '../libs/sequelize.js'
-import {Op} from 'sequelize'
+import { request } from 'express'
+import { resOk } from '../utils/functions.js'
+import { ClientError } from '../utils/errors.js'
+import { models } from '../libs/sequelize.js'
+import { Op } from 'sequelize'
 
 export class ReservationCrll {
   static async create(req = request, res) {
-    const {roomNumber, dateEntry, dateOutput} = req.body
+    const { roomNumber, dateEntry, dateOutput } = req.body
 
     if (new Date(dateOutput) < new Date(dateEntry)) {
       throw new ClientError('dates error')
@@ -44,28 +44,28 @@ export class ReservationCrll {
       regularPrice,
     })
 
-    resOk(res, {reservation: reservationCreated})
+    resOk(res, { reservation: reservationCreated })
   }
 
   static async getById(req = request, res) {
-    const {id} = req.params
+    const { id } = req.params
 
     const reservation = await models.Reservation.findByPk(id, {
       include: [
-        {model: models.Room, as: 'room'},
+        { model: models.Room, as: 'room' },
 
         {
           model: models.User,
           as: 'user',
-          attributes: {exclude: ['password']},
+          attributes: { exclude: ['password'] },
         },
 
-        {model: models.Host, as: 'host'},
-        {model: models.Register, as: 'register'},
+        { model: models.Host, as: 'host' },
+        { model: models.Register, as: 'register' },
       ],
     })
 
-    resOk(res, {reservation})
+    resOk(res, { reservation })
   }
 
   static async get(req = request, res) {
@@ -85,12 +85,12 @@ export class ReservationCrll {
       offset: page ? limit * page : 0,
       limit,
       include: [
-        {model: models.Host, as: 'host'},
-        {model: models.Register, as: 'register'},
+        { model: models.Host, as: 'host' },
+        { model: models.Register, as: 'register' },
       ],
       order: [['create_at', order]],
       where: {
-        [Op.or]: [{state: state}, {state: 'reservada'}],
+        [Op.or]: [{ state: state }, { state: 'reservada' }],
       },
     }
 
@@ -99,14 +99,14 @@ export class ReservationCrll {
 
     const reservation = await models.Reservation.findAll(options)
 
-    resOk(res, {reservation})
+    resOk(res, { reservation })
   }
 
   static async update(req = request, res) {
-    const {id} = req.params
+    const { id } = req.params
     const data = req.body
     await models.Reservation.update(
-      {...data},
+      { ...data },
       {
         where: {
           id: id,
@@ -114,16 +114,16 @@ export class ReservationCrll {
       },
     )
     const reservationsUpdate = await models.Reservation.findByPk(id)
-    resOk(res, {reservation: reservationsUpdate})
+    resOk(res, { reservation: reservationsUpdate })
   }
 
   static async delete(req = request, res) {
-    const {id} = req.params
+    const { id } = req.params
 
     const reservationDelete = await models.Reservation.destroy({
-      where: {id: id},
+      where: { id: id },
     })
 
-    resOk(res, {reservation: reservationDelete})
+    resOk(res, { reservation: reservationDelete })
   }
 }
